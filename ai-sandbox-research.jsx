@@ -1,0 +1,562 @@
+import { useState } from "react";
+
+const stats = [
+  { value: "95%", label: "ШІ-пілотів дають нуль вимірюваного фінансового результату", source: "MIT / Olakai 2025" },
+  { value: "83%", label: "Лідерів: психологічна безпека прямо впливає на успіх ШІ", source: "Infosys / MIT 2025" },
+  { value: "16%", label: "Банків довели агентний ШІ до реального впровадження (запустили 52%)", source: "EY / MIT 2025" },
+  { value: "4 000", label: "AI Accelerators у Citi — добровільна мережа ШІ-чемпіонів", source: "Business Insider 2026" },
+  { value: "30%", label: "GenAI-проєктів зависнуть у 2025 через відсутність структури і чіткої бізнес-цінності", source: "Deloitte / CMR Berkeley" },
+];
+
+const twoTiers = [
+  {
+    tier: "Рівень 1", name: "SaaS / Cloud-first", icon: "☁️", color: "#3B82F6",
+    desc: "Інструменти без потреби в on-prem інфраструктурі. Реєстрація → експеримент → результат. Підходить для більшості кейсів без конфіденційних даних.",
+    examples: ["ChatGPT Enterprise", "Claude.ai", "Gemini", "Perplexity", "NotebookLM"],
+    extras: ["MCP-сервери та підключення до зовнішніх інструментів", "ШІ-агенти та субагенти (Claude, GPT Agents)", "Claude Code / GitHub Copilot / Codex", "n8n Cloud — автоматизація та оркестрація", "Навички та кастомні інструкції (Skills/System Prompts)"],
+    pros: ["Старт за тижні, не місяці", "Без навантаження на ІТ", "Широкий вибір інструментів", "Синтетичні / анонімізовані дані"],
+    risks: ["Питання суверенітету даних", "Залежність від вендора", "Обмежена кастомізація", "Тестування поза екосистемою банку — результати можуть не відображати реальну інтеграцію з внутрішніми системами"],
+    isolation: "Логічна ізоляція. Підходить для відкритих і анонімізованих даних."
+  },
+  {
+    tier: "Рівень 2", name: "On-Prem / Self-hosted", icon: "🖥️", color: "#8B5CF6",
+    desc: "Рішення, що розгортаються у власній інфраструктурі або приватній хмарі. Більший контроль, але потребує DevOps-ресурсів.",
+    examples: ["Ollama / LM Studio / llama.cpp", "Hugging Face (локальний деплой)", "n8n self-hosted — локальна оркестрація", "LangChain / LangGraph + локальні векторні БД", "Jupyter Hub / MLflow / Kubeflow"],
+    extras: ["Open-source LLM (Llama, Mistral, Qwen)", "Локальні embedding-моделі", "RAG-пайплайни на приватних даних (лише знеособлених)", "Self-hosted агентні фреймворки"],
+    pros: ["Повний контроль інфраструктури", "Кастомні та дообтановлені моделі", "Немає передачі даних назовні", "Гнучка архітектура"],
+    risks: ["DevOps-ресурси та підтримка", "Довший час запуску", "Потребує технічної команди"],
+    isolation: "Фізична або schema-per-tenant ізоляція. Для складніших кейсів."
+  },
+];
+
+const lifecycle = [
+  { id: 1, phase: "Заявка", icon: "📋", desc: "Будь-який співробітник подає ідею. Вказує мету, тип даних, інструмент та гіпотезу бізнес-цінності. KPI-метрика визначається ДО початку.", color: "#F59E0B" },
+  { id: 2, phase: "Скринінг", icon: "🔍", desc: "Автоматична перевірка: класифікація даних, рівень ризику, відповідність політикам. Більшість кейсів — результат за 24 години.", color: "#3B82F6" },
+  { id: 3, phase: "Погодження", icon: "✅", desc: "Легкі кейси — авто-апрув. Чутливі — рев'ю ІБ + Комплаєнс. Складні — розширений цикл. SLA: 3–5 днів.", color: "#10B981" },
+  { id: 4, phase: "Експеримент", icon: "🧪", desc: "Ізольоване середовище. Логування всіх дій. Підтримка ШІ-чемпіонів і команди трансформації за запитом.", color: "#8B5CF6" },
+  { id: 5, phase: "Оцінка", icon: "📊", desc: "Порівняння з pre-defined KPI. Головне питання: proof of value, а не лише proof of concept.", color: "#EF4444" },
+  { id: 6, phase: "Рішення", icon: "🚀", desc: "Scale / Fix / Kill — рішення на основі даних. Масштабування через стандартні корпоративні процеси. Архів — теж знання.", color: "#F59E0B" },
+];
+
+const globalExamples = [
+  { org: "JPMorgan", title: "LLM Suite — вірусний opt-in", year: "2024–25", desc: "Не мандат, а opt-in. Перші отримали інструмент — решта захотіла самі. Нині 50% співробітників використовують GenAI щодня. Програма 'AI Made Easy' охопила десятки тисяч.", tag: "Банк", tagColor: "#10B981" },
+  { org: "Citi", title: "AI Accelerators & Champions", year: "2024–26", desc: "4 000 добровільних AI Accelerators + 25–30 Champions. Peer-to-peer навчання всередині бізнес-юнітів. 100+ AI Days. Зворотний зв'язок від мережі допоміг покращити самі інструменти.", tag: "Банк", tagColor: "#10B981" },
+  { org: "HSBC", title: "AI Ambassador Network", year: "2023–25", desc: "Тисячі AI Ambassadors. 5 рівнів: бізнес, технічний, senior, executive. Хакатони та менторство. Навчальні треки адаптовані до ролей.", tag: "Банк", tagColor: "#10B981" },
+  { org: "Bank of England", title: "Культура експериментів + Virtual Lab", year: "2025", desc: "Стратегія: кожен незалежно від ролі має доступ до ШІ. Governance-комітет: CDO + CIO. Власна пісочниця ECB — Virtual Lab для регуляторних команд.", tag: "Центробанк", tagColor: "#F59E0B" },
+  { org: "FCA (UK)", title: "Supercharged Sandbox", year: "2025", desc: "GPU-кластери, синтетичні дані, регуляторна підтримка спільно з NVIDIA. Два треки: discovery (дослідження) і production (підготовка до живого запуску).", tag: "Регулятор", tagColor: "#3B82F6" },
+  { org: "CBA (Австралія)", title: "GenAI Network", year: "2025", desc: "Спільнота з Chief Analytics & Data Office. Партнери: Anthropic, AWS, Microsoft. Аналог cloud guild NAB, що навчив 7 000+ співробітників хмарним технологіям.", tag: "Банк", tagColor: "#10B981" },
+];
+
+const threeLines = [
+  { line: "1-а лінія", title: "Бізнес-юніти та команди", color: "#3B82F6", desc: "Безпосередньо використовують ШІ. Відповідають за класифікацію даних, дотримання правил, ведення записів. Визначають KPI до початку." },
+  { line: "2-а лінія", title: "ІБ, Комплаєнс, Ризик", color: "#F59E0B", desc: "Незалежна перевірка. Погоджують чутливі кейси, розробляють і оновлюють політики пісочниці, проводять аудит нових інструментів." },
+  { line: "3-я лінія", title: "Внутрішній аудит", color: "#8B5CF6", desc: "Незалежна оцінка ефективності governance. Перевіряє реєстр, дотримання SLA, повноту доказової бази." },
+];
+
+const personas = [
+  { name: "ШІ-чемпіон", icon: "🏆", pct: "~10%", desc: "Рушії змін. Вже експериментують та діляться. Дайте їм платформу і визнання — вони стануть мультиплікаторами.", color: "#10B981" },
+  { name: "Незалежний дослідник", icon: "🔬", pct: "~15%", desc: "Тестують поза офіційними каналами (тіньовий ШІ). Пісочниця легалізує їхню активність і перетворює на союзників.", color: "#3B82F6" },
+  { name: "Організаційний прийнятель", icon: "📋", pct: "~35%", desc: "Чекають чіткого дозволу та прикладів. Потрібні правила, success stories та захищений час на навчання.", color: "#818CF8" },
+  { name: "Пасивний спостерігач", icon: "👀", pct: "~30%", desc: "Обізнані, але неактивні. 38% кажуть, що перегляд AI-output стомлює. Потрібні peer-демо від колег зі схожих ролей.", color: "#F59E0B" },
+  { name: "Обережний скептик", icon: "🛡️", pct: "~10%", desc: "Сумніваються у надійності. Реагують на конкретні дані та приклади — не ігноруйте їх, вони ставлять правильні питання.", color: "#EF4444" },
+];
+
+const roiFramework = [
+  { stage: "Exploring", ukr: "Дослідження", icon: "🔍", color: "#F59E0B", metrics: ["Кількість учасників пісочниці", "Час на навчання та експерименти", "Кількість ШІ-чемпіонів", "Бюджет на тестування"] },
+  { stage: "Optimizing", ukr: "Оптимізація", icon: "⚙️", color: "#3B82F6", metrics: ["Час, заощаджений на рутині", "Зменшення ручних операцій", "Cost avoidance", "NPS команд-учасників"] },
+  { stage: "Enhancing", ukr: "Покращення", icon: "📈", color: "#10B981", metrics: ["CSAT / NPS клієнтів", "Якість рішень (точність)", "Зменшення інцидентів", "Час від заявки до рішення"] },
+  { stage: "Transforming", ukr: "Трансформація", icon: "🚀", color: "#8B5CF6", metrics: ["Нові продукти / сервіси на ШІ", "AI-revenue як % від загального", "ROI на рівні P&L", "Нові сегменти / ринки"] },
+];
+
+export default function AIReport() {
+  const [activeTab, setActiveTab] = useState("overview");
+  const tabs = [
+    { id: "overview", label: "Огляд" },
+    { id: "architecture", label: "Архітектура" },
+    { id: "process", label: "Процес" },
+    { id: "culture", label: "Культура" },
+    { id: "world", label: "Світ" },
+    { id: "governance", label: "Governance" },
+    { id: "regulatory", label: "Регуляторика" },
+  ];
+
+  return (
+    <div style={{ fontFamily: "'Georgia', serif", background: "#0A0E1A", minHeight: "100vh", color: "#E2E8F0" }}>
+      {/* HEADER */}
+      <div style={{ background: "linear-gradient(135deg, #0F172A 0%, #1E1B4B 50%, #0F172A 100%)", padding: "44px 40px 32px", borderBottom: "1px solid rgba(99,102,241,0.3)", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: 0, right: 0, width: "400px", height: "400px", background: "radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ maxWidth: "960px", margin: "0 auto", position: "relative" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "14px" }}>
+            <div style={{ background: "rgba(99,102,241,0.2)", border: "1px solid rgba(99,102,241,0.4)", borderRadius: "4px", padding: "3px 10px", fontSize: "10px", letterSpacing: "2px", textTransform: "uppercase", color: "#A5B4FC" }}>Дослідницький звіт · Травень 2026 · v4</div>
+            <div style={{ background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.3)", borderRadius: "4px", padding: "3px 10px", fontSize: "10px", color: "#6EE7B7" }}>30+ джерел · Актуально для України</div>
+          </div>
+          <h1 style={{ fontSize: "clamp(26px, 3.5vw, 40px)", fontWeight: "700", lineHeight: "1.15", margin: "0 0 10px", color: "#F1F5F9" }}>ШІ-Пісочниця для Банку</h1>
+          <p style={{ fontSize: "17px", color: "#94A3B8", margin: "0", lineHeight: "1.6", maxWidth: "620px" }}>Концепція, архітектура, governance, культура та метрики<br/>контрольованого середовища ШІ-експериментів</p>
+          <div style={{ display: "flex", gap: "28px", marginTop: "24px", flexWrap: "wrap" }}>
+            {stats.slice(0, 3).map((s, i) => (
+              <div key={i}>
+                <div style={{ fontSize: "24px", fontWeight: "800", color: "#818CF8", lineHeight: 1 }}>{s.value}</div>
+                <div style={{ fontSize: "11px", color: "#64748B", marginTop: "4px", maxWidth: "180px", lineHeight: "1.4" }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* NAV */}
+      <div style={{ background: "#0F172A", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "0 40px", position: "sticky", top: 0, zIndex: 10, overflowX: "auto" }}>
+        <div style={{ maxWidth: "960px", margin: "0 auto", display: "flex", minWidth: "max-content" }}>
+          {tabs.map(t => (
+            <button key={t.id} onClick={() => setActiveTab(t.id)} style={{ background: "none", border: "none", padding: "14px 18px", fontSize: "12px", fontFamily: "inherit", cursor: "pointer", color: activeTab === t.id ? "#818CF8" : "#64748B", borderBottom: activeTab === t.id ? "2px solid #818CF8" : "2px solid transparent", transition: "all 0.2s", whiteSpace: "nowrap" }}>
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ maxWidth: "960px", margin: "0 auto", padding: "36px 40px" }}>
+
+        {/* ── OVERVIEW ── */}
+        {activeTab === "overview" && (
+          <div>
+            <SectionTitle>Навіщо потрібна пісочниця?</SectionTitle>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "40px" }}>
+              {[
+                { icon: "👻", title: "Тіньовий ШІ вже існує", desc: "Якщо немає офіційного шляху — співробітники вже сьогодні використовують різноманітні ШІ-сервіси (ChatGPT, Gemini, Grok, Perplexity та інші) з робочими даними без жодного контролю. Краще знати й контролювати.", color: "#EF4444" },
+                { icon: "😰", title: "Страх блокує інновації", desc: "22% лідерів (Infosys/MIT) боялися запустити ШІ-проєкт через страх критики. Пісочниця зі «safe to fail»-культурою знімає цей бар'єр.", color: "#F59E0B" },
+                { icon: "☠️", title: "Без структури — пілоти не стають цінністю", desc: "95% ШІ-пілотів не дають вимірюваного фінансового результату (MIT 2025). 30% GenAI-проєктів зависають через відсутність чіткої бізнес-цінності. Структурований шлях від ідеї до value — обов'язковий.", color: "#8B5CF6" },
+                { icon: "⚡", title: "Конкурентна перевага", desc: "Банки, що вже мають культуру ШІ-експериментів (JPMorgan, DBS, Citi), набувають переваги швидше. 50% співробітників JPMorgan використовують GenAI щодня.", color: "#3B82F6" },
+              ].map((c, i) => (
+                <div key={i} style={{ background: "#111827", border: `1px solid ${c.color}25`, borderRadius: "12px", padding: "20px" }}>
+                  <div style={{ fontSize: "28px", marginBottom: "10px" }}>{c.icon}</div>
+                  <h4 style={{ margin: "0 0 8px", fontSize: "14px", fontWeight: "600", color: c.color }}>{c.title}</h4>
+                  <p style={{ margin: 0, fontSize: "13px", color: "#64748B", lineHeight: "1.6" }}>{c.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <SectionTitle>Ключові цифри</SectionTitle>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "14px", marginBottom: "44px" }}>
+              {stats.map((s, i) => <StatCard key={i} {...s} />)}
+            </div>
+
+            <SectionTitle>Що таке ШІ-Пісочниця?</SectionTitle>
+            <div style={{ background: "rgba(30,27,75,0.5)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: "12px", padding: "24px", marginBottom: "36px" }}>
+              <p style={{ margin: "0 0 14px", fontSize: "15px", color: "#CBD5E1", lineHeight: "1.8" }}>
+                <strong style={{ color: "#E2E8F0" }}>ШІ-Пісочниця</strong> — контрольоване середовище, де будь-який співробітник може безпечно та прозоро тестувати ШІ-інструменти незалежно від наявності цих інструментів в офіційно затвердженому стеку. Ключовий принцип: <em style={{ color: "#A5B4FC" }}>«дозволяти і контролювати»</em> замість «забороняти і ігнорувати».
+              </p>
+              <p style={{ margin: 0, fontSize: "13px", color: "#64748B", lineHeight: "1.7" }}>
+                JPMorgan Chase (McKinsey, 2025): «Ми не мандатували LLM Suite — ми зробили opt-in. Перші отримали доступ, решта захотіла самі. Це створило здорову конкуренцію і культуру прийняття. Сьогодні 50% співробітників використовують GenAI щодня.»
+              </p>
+            </div>
+
+            <SectionTitle>Як виглядає пісочниця концептуально</SectionTitle>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "14px" }}>
+              {[
+                { icon: "📥", title: "Вхід", items: ["Ідея / Use Case", "Тип даних (відкриті / анонімні)", "Очікуваний результат", "Відповідальна особа"], color: "#3B82F6" },
+                { icon: "🧪", title: "Всередині", items: ["Ізольоване середовище", "Доступ до ШІ-інструментів (SaaS або On-prem)", "Підтримка команди трансформації", "Логування дій"], color: "#8B5CF6" },
+                { icon: "📤", title: "Вихід", items: ["Scale → впровадження", "Fix → ще один цикл", "Kill → архів + висновки", "Реєстр знань організації"], color: "#10B981" },
+              ].map((b, i) => (
+                <div key={i} style={{ background: "#111827", border: `1px solid ${b.color}30`, borderRadius: "12px", padding: "20px" }}>
+                  <div style={{ fontSize: "26px", marginBottom: "10px" }}>{b.icon}</div>
+                  <h4 style={{ margin: "0 0 12px", fontSize: "13px", fontWeight: "600", color: b.color }}>{b.title}</h4>
+                  {b.items.map((it, j) => <div key={j} style={{ fontSize: "12px", color: "#64748B", marginBottom: "5px" }}>· {it}</div>)}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── ARCHITECTURE ── */}
+        {activeTab === "architecture" && (
+          <div>
+            <SectionTitle>Дворівнева архітектура</SectionTitle>
+            <p style={{ color: "#64748B", marginBottom: "24px", fontSize: "13px", lineHeight: "1.7" }}>Пісочниця природно ділиться на два рівні залежно від вимог до інфраструктури. Обидва рівні працюють з тестовими / анонімізованими даними — живі банківські дані і виробничі системи залишаються поза межами пісочниці.</p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))", gap: "24px", marginBottom: "40px" }}>
+              {twoTiers.map((tier, i) => (
+                <div key={i} style={{ background: "#111827", border: `1px solid ${tier.color}40`, borderRadius: "16px", padding: "26px", position: "relative", overflow: "hidden" }}>
+                  <div style={{ position: "absolute", top: 0, right: 0, width: "180px", height: "180px", background: `radial-gradient(circle, ${tier.color}10 0%, transparent 70%)`, pointerEvents: "none" }} />
+                  <div style={{ fontSize: "32px", marginBottom: "10px" }}>{tier.icon}</div>
+                  <div style={{ fontSize: "10px", color: tier.color, letterSpacing: "2px", textTransform: "uppercase", marginBottom: "5px" }}>{tier.tier}</div>
+                  <h3 style={{ fontSize: "19px", fontWeight: "700", color: "#F1F5F9", margin: "0 0 10px" }}>{tier.name}</h3>
+                  <p style={{ fontSize: "13px", color: "#94A3B8", lineHeight: "1.7", margin: "0 0 16px" }}>{tier.desc}</p>
+
+                  <div style={{ marginBottom: "14px" }}>
+                    <div style={{ fontSize: "10px", color: "#475569", letterSpacing: "1px", textTransform: "uppercase", marginBottom: "6px" }}>Базові інструменти</div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "10px" }}>
+                      {tier.examples.map((e, j) => <span key={j} style={{ background: `${tier.color}15`, border: `1px solid ${tier.color}30`, borderRadius: "4px", padding: "2px 7px", fontSize: "11px", color: tier.color }}>{e}</span>)}
+                    </div>
+                    <div style={{ fontSize: "10px", color: "#475569", letterSpacing: "1px", textTransform: "uppercase", marginBottom: "6px" }}>Розширені можливості</div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+                      {tier.extras.map((e, j) => <span key={j} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "4px", padding: "2px 7px", fontSize: "11px", color: "#64748B" }}>{e}</span>)}
+                    </div>
+                  </div>
+
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                    <div>
+                      <div style={{ fontSize: "10px", color: "#10B981", letterSpacing: "1px", marginBottom: "5px" }}>✓ ПЕРЕВАГИ</div>
+                      {tier.pros.map((p, j) => <div key={j} style={{ fontSize: "11px", color: "#6EE7B7", marginBottom: "3px" }}>· {p}</div>)}
+                    </div>
+                    <div>
+                      <div style={{ fontSize: "10px", color: "#EF4444", letterSpacing: "1px", marginBottom: "5px" }}>⚠ РИЗИКИ</div>
+                      {tier.risks.map((r, j) => <div key={j} style={{ fontSize: "11px", color: "#FCA5A5", marginBottom: "3px" }}>· {r}</div>)}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: "10px", padding: "16px 20px", marginBottom: "40px" }}>
+              <div style={{ fontSize: "12px", fontWeight: "600", color: "#EF4444", marginBottom: "6px" }}>⚠ Важливо: що НЕ входить до пісочниці</div>
+              <p style={{ margin: 0, fontSize: "13px", color: "#94A3B8", lineHeight: "1.6" }}>
+                Пісочниця працює виключно з <strong style={{ color: "#E2E8F0" }}>відкритими, синтетичними або анонімізованими даними</strong>. Живі транзакційні дані клієнтів, підключення до core-банківських систем та виробничі процеси — поза межами пісочниці. Це не обмеження, а умова безпечного і незалежного від ІТ-ландшафту запуску.
+              </p>
+            </div>
+
+            <SectionTitle>Класифікація даних</SectionTitle>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "14px" }}>
+              {[
+                { level: "🟢 Відкриті", desc: "Публічна інформація, синтетичні набори, загальнодоступні датасети", allowed: "Рівень 1 і 2 без обмежень" },
+                { level: "🟡 Анонімізовані", desc: "Деперсоналізовані клієнтські дані, агрегована статистика без прямих ідентифікаторів", allowed: "За схвалення ІБ та Комплаєнс" },
+                { level: "🔴 Конфіденційні", desc: "Персональні дані, транзакційні записи, дані систем із ідентифікаторами", allowed: "Заборонені у пісочниці. Потребують окремого процесу поза пісочницею." },
+              ].map((d, i) => (
+                <div key={i} style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "18px" }}>
+                  <div style={{ fontSize: "15px", fontWeight: "600", color: "#E2E8F0", marginBottom: "6px" }}>{d.level}</div>
+                  <p style={{ fontSize: "12px", color: "#94A3B8", marginBottom: "10px", lineHeight: "1.5" }}>{d.desc}</p>
+                  <div style={{ fontSize: "11px", color: "#64748B", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "8px" }}>{d.allowed}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── PROCESS ── */}
+        {activeTab === "process" && (
+          <div>
+            <SectionTitle>Життєвий цикл експерименту</SectionTitle>
+            <p style={{ color: "#64748B", marginBottom: "28px", lineHeight: "1.7", fontSize: "13px" }}>Головне правило: <strong style={{ color: "#A5B4FC" }}>KPI та критерій успіху визначаються ДО початку</strong>, а не після. Retrofitting measurement коштує в 3–4 рази дорожче і дає гіршу якість даних (MIT, 2025).</p>
+            <div style={{ marginBottom: "44px" }}>
+              {lifecycle.map((step, i) => (
+                <div key={i} style={{ display: "flex", gap: "18px", marginBottom: "4px" }}>
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
+                    <div style={{ width: "44px", height: "44px", background: `${step.color}20`, border: `2px solid ${step.color}60`, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px", zIndex: 1 }}>{step.icon}</div>
+                    {i < lifecycle.length - 1 && <div style={{ width: "2px", flex: 1, background: "rgba(255,255,255,0.05)", minHeight: "28px" }} />}
+                  </div>
+                  <div style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "14px 18px", flex: 1, marginBottom: "10px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "5px" }}>
+                      <span style={{ fontSize: "11px", color: step.color, fontWeight: "600", letterSpacing: "1px", textTransform: "uppercase" }}>Етап {step.id}</span>
+                      <h4 style={{ margin: 0, fontSize: "15px", fontWeight: "600", color: "#E2E8F0" }}>{step.phase}</h4>
+                    </div>
+                    <p style={{ margin: 0, fontSize: "13px", color: "#94A3B8", lineHeight: "1.6" }}>{step.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <SectionTitle>Рішення після оцінки: Scale / Fix / Kill</SectionTitle>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "14px", marginBottom: "40px" }}>
+              {[
+                { icon: "🚀", title: "Scale", color: "#10B981", desc: "KPI перевищено. Proof of value підтверджено. Передається для впровадження через стандартні корпоративні процеси з погодженням профільних підрозділів." },
+                { icon: "🔧", title: "Fix", color: "#F59E0B", desc: "Цікавий кейс, але KPI не досягнуто. Діагностика через operational metrics. Корекція і новий цикл. Чіткий термін повторної оцінки." },
+                { icon: "📦", title: "Kill", color: "#64748B", desc: "Нижче Kill-threshold. Припиняється без шкоди для команди. Документується — «що не спрацювало» є також знанням організації." },
+              ].map((o, i) => (
+                <div key={i} style={{ background: "#111827", border: `1px solid ${o.color}30`, borderRadius: "12px", padding: "22px", textAlign: "center" }}>
+                  <div style={{ fontSize: "30px", marginBottom: "10px" }}>{o.icon}</div>
+                  <h4 style={{ fontSize: "16px", fontWeight: "700", color: o.color, margin: "0 0 10px" }}>{o.title}</h4>
+                  <p style={{ fontSize: "12px", color: "#64748B", lineHeight: "1.6", margin: 0 }}>{o.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <SectionTitle>Принципи «безпечного експерименту»</SectionTitle>
+            <div style={{ background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.2)", borderRadius: "12px", padding: "22px" }}>
+              {[
+                "Співробітник не буде покараний за експеримент у рамках правил пісочниці — незалежно від результату",
+                "Kill-результат = цінне знання. Документується і доступне для всіх у реєстрі",
+                "Усі правила публікуються заздалегідь на єдиній внутрішній сторінці — без «непередбачених» порушень",
+                "SLA: ≤24 год для легких кейсів, ≤5 днів для складних",
+                "KPI визначається командою ДО початку — жодного post-hoc threshold setting",
+                "Дані не виходять за межі затвердженого контуру. Логування прозоре — команда знає, що фіксується",
+              ].map((p, i) => (
+                <div key={i} style={{ display: "flex", gap: "10px", alignItems: "flex-start", marginBottom: i < 5 ? "10px" : "0" }}>
+                  <div style={{ color: "#10B981", flexShrink: 0, marginTop: "2px" }}>✓</div>
+                  <div style={{ fontSize: "13px", color: "#94A3B8", lineHeight: "1.6" }}>{p}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── CULTURE ── */}
+        {activeTab === "culture" && (
+          <div>
+            <SectionTitle>Психологічна безпека — основа ШІ-адопції</SectionTitle>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "14px", marginBottom: "40px" }}>
+              {[
+                { val: "83%", text: "лідерів: psychological safety прямо впливає на успіх ШІ-ініціатив", source: "Infosys / MIT 2025" },
+                { val: "22%", text: "керівників вагались запустити ШІ-проєкт через страх критики", source: "Infosys / MIT 2025" },
+                { val: "39%", text: "організацій мають «дуже високий» рівень психологічної безпеки", source: "MIT Technology Review" },
+              ].map((s, i) => (
+                <div key={i} style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "20px", textAlign: "center" }}>
+                  <div style={{ fontSize: "32px", fontWeight: "800", color: "#818CF8", marginBottom: "8px" }}>{s.val}</div>
+                  <p style={{ fontSize: "12px", color: "#94A3B8", lineHeight: "1.5", margin: "0 0 8px" }}>{s.text}</p>
+                  <div style={{ fontSize: "10px", color: "#334155" }}>{s.source}</div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ background: "rgba(30,27,75,0.4)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: "12px", padding: "22px", marginBottom: "40px" }}>
+              <p style={{ margin: "0 0 10px", fontSize: "14px", color: "#CBD5E1", lineHeight: "1.7" }}>
+                Infosys CTO: <em>«Технологія еволюціонує так швидко — компанії мусять експериментувати, і щось буде провалюватись. Потрібна страховка.»</em>
+              </p>
+              <p style={{ margin: 0, fontSize: "13px", color: "#64748B", lineHeight: "1.7" }}>
+                Microsoft (2025): <em>«Якщо люди бояться соціального осуду за використання ШІ — вони свідомо уникатимуть цих інструментів, навіть коли вони можуть покращити роботу.»</em>
+              </p>
+            </div>
+
+            <SectionTitle>5 персон співробітників (BCG, 2025)</SectionTitle>
+            <div style={{ display: "grid", gap: "12px", marginBottom: "40px" }}>
+              {personas.map((p, i) => (
+                <div key={i} style={{ background: "#111827", border: `1px solid ${p.color}25`, borderRadius: "10px", padding: "16px 20px", display: "grid", gridTemplateColumns: "32px 80px 1fr", gap: "14px", alignItems: "center" }}>
+                  <div style={{ fontSize: "22px" }}>{p.icon}</div>
+                  <div>
+                    <div style={{ fontSize: "12px", fontWeight: "600", color: p.color }}>{p.name}</div>
+                    <div style={{ fontSize: "11px", color: "#475569" }}>{p.pct}</div>
+                  </div>
+                  <p style={{ margin: 0, fontSize: "13px", color: "#64748B", lineHeight: "1.5" }}>{p.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <SectionTitle>Програми ШІ-чемпіонів у банках</SectionTitle>
+            <div style={{ display: "grid", gap: "12px", marginBottom: "40px" }}>
+              {[
+                { org: "Citi", detail: "4 000 добровільних AI Accelerators + 25–30 Champions. Peer-to-peer навчання. 100+ AI Days. Зворотний зв'язок від мережі допоміг покращити самі інструменти.", color: "#10B981" },
+                { org: "HSBC", detail: "Тисячі AI Ambassadors. 5 рівнів (бізнес / технічний / senior / executive). Хакатони, менторство.", color: "#3B82F6" },
+                { org: "JPMorgan", detail: "Opt-in, не мандат. «AI Made Easy» — масштабна навчальна програма. Вірусне поширення через FOMO.", color: "#8B5CF6" },
+                { org: "CBA (Австралія)", detail: "GenAI Network з Chief Analytics & Data Office. Аналог cloud guild, що навчив 7 000+ хмарним технологіям.", color: "#F59E0B" },
+              ].map((b, i) => (
+                <div key={i} style={{ background: "#111827", border: `1px solid ${b.color}25`, borderRadius: "10px", padding: "16px 20px", display: "grid", gridTemplateColumns: "70px 1fr", gap: "14px", alignItems: "start" }}>
+                  <div style={{ fontSize: "13px", fontWeight: "700", color: b.color }}>{b.org}</div>
+                  <p style={{ margin: 0, fontSize: "13px", color: "#64748B", lineHeight: "1.6" }}>{b.detail}</p>
+                </div>
+              ))}
+            </div>
+
+            <SectionTitle>ROI-фреймворк: 4 стадії зрілості (Atlassian, 2026)</SectionTitle>
+            <p style={{ color: "#64748B", marginBottom: "20px", fontSize: "13px" }}>Помилка більшості: вимагати revenue impact від команди на стадії Exploring. Правильні метрики — для правильної стадії.</p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "14px" }}>
+              {roiFramework.map((s, i) => (
+                <div key={i} style={{ background: "#111827", border: `1px solid ${s.color}30`, borderRadius: "12px", padding: "18px" }}>
+                  <div style={{ fontSize: "24px", marginBottom: "8px" }}>{s.icon}</div>
+                  <div style={{ fontSize: "10px", color: s.color, letterSpacing: "1px", textTransform: "uppercase", marginBottom: "4px" }}>{s.stage}</div>
+                  <div style={{ fontSize: "13px", fontWeight: "600", color: "#E2E8F0", marginBottom: "12px" }}>{s.ukr}</div>
+                  {s.metrics.map((m, j) => <div key={j} style={{ fontSize: "11px", color: "#475569", marginBottom: "4px" }}>· {m}</div>)}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── WORLD ── */}
+        {activeTab === "world" && (
+          <div>
+            <SectionTitle>Приклади банків і регуляторів</SectionTitle>
+            <div style={{ display: "grid", gap: "14px", marginBottom: "44px" }}>
+              {globalExamples.map((ex, i) => (
+                <div key={i} style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "22px", display: "grid", gridTemplateColumns: "auto 1fr", gap: "18px", alignItems: "start" }}>
+                  <div style={{ textAlign: "center", minWidth: "75px" }}>
+                    <div style={{ fontSize: "12px", fontWeight: "700", color: "#E2E8F0", marginBottom: "5px" }}>{ex.org}</div>
+                    <div style={{ background: `${ex.tagColor}20`, border: `1px solid ${ex.tagColor}40`, borderRadius: "4px", padding: "2px 7px", fontSize: "10px", color: ex.tagColor }}>{ex.tag}</div>
+                    <div style={{ fontSize: "11px", color: "#475569", marginTop: "4px" }}>{ex.year}</div>
+                  </div>
+                  <div>
+                    <h4 style={{ margin: "0 0 7px", fontSize: "15px", fontWeight: "600", color: "#C7D2FE" }}>{ex.title}</h4>
+                    <p style={{ margin: 0, fontSize: "13px", color: "#94A3B8", lineHeight: "1.7" }}>{ex.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <SectionTitle>Тренди 2025–2026</SectionTitle>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px" }}>
+              {[
+                { icon: "🌐", title: "Регуляторні пісочниці", trend: "25+ регуляторних AI-пісочниць у світі (OECD). Регулятори змінюють роль зі спостерігача на партнера з інновацій. FCA (UK) запустив Supercharged Sandbox з двома треками." },
+                { icon: "🤖", title: "Agentic AI — новий фокус", trend: "52% банків запустили пілоти, але 16% дійшли до реального впровадження (EY/MIT). Пісочниця — тест-полігон для агентів і субагентів перед масштабуванням." },
+                { icon: "👥", title: "Peer-to-peer переважає top-down", trend: "Microsoft, BCG, JPMorgan: grassroots adoption ефективніший за мандати. Чемпіони та ambassador-мережі — ключовий інструмент масштабування." },
+                { icon: "📊", title: "Від POC до proof of value", trend: "95% пілотів не мають вимірюваного результату. Тиск на proof of value зростає. Sandboxes з вбудованим ROI-фреймворком — нова практика." },
+              ].map((t, i) => (
+                <div key={i} style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "18px" }}>
+                  <div style={{ fontSize: "26px", marginBottom: "9px" }}>{t.icon}</div>
+                  <h4 style={{ margin: "0 0 7px", fontSize: "13px", fontWeight: "600", color: "#E2E8F0" }}>{t.title}</h4>
+                  <p style={{ margin: 0, fontSize: "12px", color: "#64748B", lineHeight: "1.6" }}>{t.trend}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── GOVERNANCE ── */}
+        {activeTab === "governance" && (
+          <div>
+            <SectionTitle>Модель трьох ліній захисту</SectionTitle>
+            <p style={{ color: "#64748B", marginBottom: "20px", fontSize: "13px", lineHeight: "1.7" }}>Класична банківська модель 3LoD адаптується для ШІ-governance. Це дозволяє вписати пісочницю в існуючу систему ризик-менеджменту без створення паралельних структур.</p>
+            <div style={{ display: "grid", gap: "12px", marginBottom: "36px" }}>
+              {threeLines.map((l, i) => (
+                <div key={i} style={{ background: "#111827", border: `1px solid ${l.color}30`, borderRadius: "10px", padding: "18px", display: "grid", gridTemplateColumns: "110px 1fr", gap: "18px", alignItems: "start" }}>
+                  <div>
+                    <div style={{ fontSize: "10px", color: l.color, letterSpacing: "1px", textTransform: "uppercase", marginBottom: "3px" }}>{l.line}</div>
+                    <div style={{ fontSize: "12px", fontWeight: "600", color: "#E2E8F0", lineHeight: "1.4" }}>{l.title}</div>
+                  </div>
+                  <p style={{ margin: 0, fontSize: "13px", color: "#94A3B8", lineHeight: "1.7" }}>{l.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <SectionTitle>Реєстр експериментів</SectionTitle>
+            <p style={{ color: "#64748B", marginBottom: "16px", fontSize: "13px", lineHeight: "1.7" }}>Реєстр — центральна точка прозорості. Federal Reserve веде обов'язковий use case inventory для всіх ШІ-ініціатив. Для нас — це також інструмент накопичення корпоративних знань і основа для майбутнього аудиту.</p>
+            <div style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "22px", marginBottom: "36px" }}>
+              {[
+                "Назва та опис мети експерименту",
+                "Бізнес-юніт, команда та відповідальна особа",
+                "ШІ-інструмент / модель / рівень (SaaS або On-prem)",
+                "Тип даних (відкриті / анонімізовані)",
+                "Дата початку та планова дата завершення",
+                "KPI та baseline (визначено ДО початку)",
+                "Статус (в процесі / завершено / Scale / Kill / архів)",
+                "Ключові висновки та proof of value",
+                "Рекомендація: scale / fix / kill та обґрунтування",
+              ].map((f, i) => (
+                <div key={i} style={{ display: "flex", gap: "14px", alignItems: "center", padding: "9px 0", borderBottom: i < 8 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
+                  <div style={{ width: "22px", height: "22px", background: "rgba(99,102,241,0.2)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: "700", color: "#818CF8", flexShrink: 0 }}>{i + 1}</div>
+                  <div style={{ fontSize: "13px", color: "#CBD5E1" }}>{f}</div>
+                </div>
+              ))}
+            </div>
+
+            <SectionTitle>Хто відповідає за пісочницю?</SectionTitle>
+            <div style={{ background: "rgba(30,27,75,0.4)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: "12px", padding: "22px", marginBottom: "32px" }}>
+              <p style={{ margin: "0 0 14px", fontSize: "13px", color: "#94A3B8", lineHeight: "1.7" }}>
+                Власником може бути <strong style={{ color: "#E2E8F0" }}>будь-який підрозділ</strong>: команда трансформації, ІТ, конкретний бізнес-юніт або спільна ініціативна група. Ключове — процес погодження включає всі необхідні служби.
+              </p>
+              <div style={{ display: "grid", gap: "9px" }}>
+                {[
+                  { who: "Власник пісочниці", what: "Веде реєстр, публікує правила, підтримує процес, організовує демо — конкретний підрозділ визначається організацією", color: "#818CF8" },
+                  { who: "ЦК ШІ / CoE (якщо є)", what: "Методична підтримка, best practices, координація — партнер і ресурс, а не обов'язковий власник", color: "#A5B4FC" },
+                  { who: "ІБ + Комплаєнс", what: "Обов'язкове погодження для чутливих кейсів, розробка правил використання даних", color: "#F59E0B" },
+                  { who: "Ризик / Юридична", what: "Погодження для складних кейсів, моніторинг регуляторних змін", color: "#10B981" },
+                ].map((r, i) => (
+                  <div key={i} style={{ display: "flex", gap: "12px", alignItems: "start" }}>
+                    <div style={{ fontSize: "11px", fontWeight: "600", color: r.color, flexShrink: 0, minWidth: "150px", paddingTop: "1px" }}>{r.who}</div>
+                    <div style={{ fontSize: "12px", color: "#64748B", lineHeight: "1.5" }}>{r.what}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <SectionTitle>Практичні рекомендації</SectionTitle>
+            <div style={{ background: "rgba(30,27,75,0.4)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: "12px", padding: "24px" }}>
+              {[
+                { step: "01", title: "Починайте з SaaS та наявних інструментів", desc: "Запустіть пісочницю на основі наявних доступів (Claude, ChatGPT, Gemini тощо) — це знімає ІТ-бар'єри та дає результати за 2–4 тижні. Одна wiki-сторінка з переліком правил — вже достатньо для старту." },
+                { step: "02", title: "KPI до першого експерименту", desc: "Домовтесь про success threshold ще на етапі заявки. Retrofitting measurement = 3–4x дорожче і гірша якість даних (MIT)." },
+                { step: "03", title: "Виявіть і підтримайте чемпіонів", desc: "JPMorgan, Citi, HSBC: peer-to-peer дає більше, ніж top-down rollout. Почніть з виявлення природних ентузіастів у кожному підрозділі." },
+                { step: "04", title: "Tiered governance — не все однаково ризиковано", desc: "Саммарі листа ≠ складна модель аналізу. Легкий кейс не повинен чекати комітету. Risk-based підхід — міжнародний стандарт." },
+                { step: "05", title: "Демо кожні 6 тижнів", desc: "Публічні демо — найефективніший спосіб створити культуру обміну знаннями і показати цінність пісочниці бізнесу." },
+              ].map((r, i) => (
+                <div key={i} style={{ display: "flex", gap: "14px", alignItems: "start", marginBottom: i < 4 ? "18px" : "0" }}>
+                  <div style={{ fontSize: "24px", fontWeight: "800", color: "rgba(99,102,241,0.3)", lineHeight: 1, flexShrink: 0, minWidth: "28px" }}>{r.step}</div>
+                  <div>
+                    <h4 style={{ margin: "0 0 3px", fontSize: "14px", fontWeight: "600", color: "#E2E8F0" }}>{r.title}</h4>
+                    <p style={{ margin: 0, fontSize: "12px", color: "#64748B", lineHeight: "1.6" }}>{r.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── REGULATORY ── */}
+        {activeTab === "regulatory" && (
+          <div>
+            <div style={{ background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.25)", borderRadius: "12px", padding: "20px 24px", marginBottom: "36px" }}>
+              <div style={{ fontSize: "12px", fontWeight: "600", color: "#10B981", marginBottom: "8px" }}>🇺🇦 Контекст для України</div>
+              <p style={{ margin: 0, fontSize: "13px", color: "#94A3B8", lineHeight: "1.7" }}>
+                Україна не є членом ЄС і не підпадає під пряму дію EU AI Act або DORA. AI Act застосовується лише до організацій, що надають послуги або виводять системи на ринок ЄС (ст. 2). Якщо банк не обслуговує клієнтів в ЄС — прямих зобов'язань немає. <strong style={{ color: "#E2E8F0" }}>Однак</strong> ці стандарти корисні як найкраща практика, і можуть стати актуальними при євроінтеграції або партнерстві з EU-фінустановами.
+              </p>
+            </div>
+
+            <SectionTitle>EU AI Act — що це і для кого</SectionTitle>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "36px" }}>
+              <div style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "20px" }}>
+                <div style={{ fontSize: "12px", fontWeight: "600", color: "#EF4444", marginBottom: "10px" }}>Коли AI Act застосовується до НЕ-EU банку</div>
+                {["Банк розгортає ШІ-системи для клієнтів або партнерів в ЄС", "Вихідні дані ШІ-системи використовуються суб'єктами в ЄС", "Банк має дочірні структури або відділення в ЄС"].map((it, i) => (
+                  <div key={i} style={{ fontSize: "12px", color: "#94A3B8", marginBottom: "6px" }}>· {it}</div>
+                ))}
+              </div>
+              <div style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "20px" }}>
+                <div style={{ fontSize: "12px", fontWeight: "600", color: "#10B981", marginBottom: "10px" }}>Коли AI Act НЕ застосовується</div>
+                {["Банк працює виключно на внутрішньому ринку України", "Немає клієнтів або вихідних даних, що надходять до ЄС", "Внутрішні ШІ-інструменти без виходу на ринок ЄС"].map((it, i) => (
+                  <div key={i} style={{ fontSize: "12px", color: "#94A3B8", marginBottom: "6px" }}>· {it}</div>
+                ))}
+              </div>
+            </div>
+
+            <SectionTitle>Найкращі практики ЄС — корисне для будь-якого банку</SectionTitle>
+            <p style={{ color: "#64748B", marginBottom: "20px", fontSize: "13px", lineHeight: "1.7" }}>Навіть без прямих зобов'язань, ці практики є ефективними стандартами управління ризиками ШІ, які варто розглянути незалежно від регуляторного зобов'язання.</p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px", marginBottom: "36px" }}>
+              {[
+                { title: "AI Inventory (реєстр)", desc: "Облік всіх ШІ-систем в організації, включно з тіньовим ШІ. Federal Reserve, Bank of England — всі ведуть обов'язково.", icon: "📋" },
+                { title: "Risk tiering", desc: "Класифікація кейсів за рівнем ризику. Різні ризики → різні процеси погодження. Уникаємо over- і under-governance.", icon: "🎯" },
+                { title: "Human oversight", desc: "Для рішень, що впливають на людей (кредити, оцінки), — фіксований процес перевірки людиною.", icon: "👁️" },
+                { title: "AI Literacy", desc: "EU AI Act Art. 4: обов'язкове навчання з лютого 2025 для EU-банків. Для нас — найкраща практика, що безпосередньо підтримує успіх пісочниці.", icon: "📚" },
+              ].map((b, i) => (
+                <div key={i} style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "18px" }}>
+                  <div style={{ fontSize: "24px", marginBottom: "8px" }}>{b.icon}</div>
+                  <h4 style={{ margin: "0 0 8px", fontSize: "13px", fontWeight: "600", color: "#E2E8F0" }}>{b.title}</h4>
+                  <p style={{ margin: 0, fontSize: "12px", color: "#64748B", lineHeight: "1.5" }}>{b.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <SectionTitle>Внутрішнє регулювання НБУ та кращі практики</SectionTitle>
+            <div style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "22px", marginBottom: "36px" }}>
+              <p style={{ margin: "0 0 14px", fontSize: "13px", color: "#94A3B8", lineHeight: "1.7" }}>
+                Наразі в Україні немає спеціального закону про ШІ, схожого на EU AI Act. Пісочниця будується на основі чинних внутрішніх нормативів:
+              </p>
+              {[
+                "Внутрішня політика інформаційної безпеки (класифікація даних, дозволені інструменти)",
+                "Вимоги НБУ щодо захисту персональних даних та інформаційної безпеки",
+                "Закон України «Про захист персональних даних»",
+                "Внутрішня модель ризик-менеджменту та операційних ризиків",
+                "Підходи, що демонструють дотримання принципів відповідального використання ШІ",
+              ].map((it, i) => (
+                <div key={i} style={{ display: "flex", gap: "10px", alignItems: "flex-start", marginBottom: i < 4 ? "8px" : "0" }}>
+                  <div style={{ color: "#818CF8", flexShrink: 0, marginTop: "2px" }}>·</div>
+                  <div style={{ fontSize: "13px", color: "#64748B" }}>{it}</div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ padding: "16px 18px", background: "rgba(15,23,42,0.8)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", fontSize: "11px", color: "#475569", lineHeight: "1.8" }}>
+              <strong style={{ color: "#64748B" }}>Джерела:</strong> EU AI Act Article 2 (Scope), artificialintelligenceact.eu, Morgan Lewis EU AI Act Extraterritorial Reach (2024), WCR Legal Non-EU Providers Guide (2026), EBA AI Act Implications for EU Banking (листоп. 2025), ECB Supervisory Priorities 2026–28, ECB AI & Supervision Speech (жовт. 2025), Knowlee AI Compliance Banking & DORA (квіт. 2026), Bank of England AI Strategy (2025), Federal Reserve AI Compliance Plan (2025), EY/MIT Agentic AI Banking Report (2025), HFS Research BFSI AI Scale (2026), Infosys/MIT Psychological Safety AI Era (2025), BCG AI Adoption Puzzle (2025), Microsoft New Future of Work (2025), JPMorgan/McKinsey AI Culture (2025), Citi AI Accelerators (Business Insider 2026), HSBC AI Ambassador Network, CBA GenAI Network (2025), Atlassian AI ROI Framework (2026), Olakai 30-Day AI Pilot (2026), CMR Berkeley AI Sandboxes (2025)
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function SectionTitle({ children }) {
+  return <h2 style={{ fontSize: "17px", fontWeight: "700", color: "#E2E8F0", margin: "0 0 18px", paddingBottom: "10px", borderBottom: "1px solid rgba(255,255,255,0.06)", letterSpacing: "-0.2px" }}>{children}</h2>;
+}
+
+function StatCard({ value, label, source }) {
+  return (
+    <div style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "18px 22px" }}>
+      <div style={{ fontSize: "26px", fontWeight: "800", color: "#818CF8", lineHeight: 1, marginBottom: "6px" }}>{value}</div>
+      <div style={{ fontSize: "12px", color: "#94A3B8", lineHeight: "1.5", marginBottom: "8px" }}>{label}</div>
+      <div style={{ fontSize: "10px", color: "#334155" }}>{source}</div>
+    </div>
+  );
+}
