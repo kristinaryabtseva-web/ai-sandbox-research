@@ -7,9 +7,18 @@
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0A0E1A; }
+    body {
+      background: #0A0E1A;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
   </style>
 </head>
 <body>
@@ -92,7 +101,7 @@
       return (
         <div style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "18px 22px" }}>
           <div style={{ fontSize: "26px", fontWeight: "800", color: "#818CF8", lineHeight: 1, marginBottom: "6px" }}>{value}</div>
-          <div style={{ fontSize: "12px", color: "#94A3B8", lineHeight: "1.5", marginBottom: "8px" }}>{label}</div>
+          <div style={{ fontSize: "13px", color: "#94A3B8", lineHeight: "1.5", marginBottom: "8px" }}>{label}</div>
           <div style={{ fontSize: "10px", color: "#334155" }}>{source}</div>
         </div>
       );
@@ -111,7 +120,7 @@
       ];
 
       return (
-        <div style={{ fontFamily: "'Georgia', serif", background: "#0A0E1A", minHeight: "100vh", color: "#E2E8F0" }}>
+        <div style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", background: "#0A0E1A", minHeight: "100vh", color: "#E2E8F0" }}>
           {/* HEADER */}
           <div style={{ background: "linear-gradient(135deg, #0F172A 0%, #1E1B4B 50%, #0F172A 100%)", padding: "44px 40px 32px", borderBottom: "1px solid rgba(99,102,241,0.3)", position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: 0, right: 0, width: "400px", height: "400px", background: "radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
@@ -126,7 +135,7 @@
                 {stats.slice(0, 3).map((s, i) => (
                   <div key={i}>
                     <div style={{ fontSize: "24px", fontWeight: "800", color: "#818CF8", lineHeight: 1 }}>{s.value}</div>
-                    <div style={{ fontSize: "11px", color: "#64748B", marginTop: "4px", maxWidth: "180px", lineHeight: "1.4" }}>{s.label}</div>
+                    <div style={{ fontSize: "12px", color: "#94A3B8", marginTop: "4px", maxWidth: "180px", lineHeight: "1.4" }}>{s.label}</div>
                   </div>
                 ))}
               </div>
@@ -137,7 +146,7 @@
           <div style={{ background: "#0F172A", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "0 40px", position: "sticky", top: 0, zIndex: 10, overflowX: "auto" }}>
             <div style={{ maxWidth: "960px", margin: "0 auto", display: "flex", minWidth: "max-content" }}>
               {tabs.map(t => (
-                <button key={t.id} onClick={() => setActiveTab(t.id)} style={{ background: "none", border: "none", padding: "14px 18px", fontSize: "12px", fontFamily: "inherit", cursor: "pointer", color: activeTab === t.id ? "#818CF8" : "#64748B", borderBottom: activeTab === t.id ? "2px solid #818CF8" : "2px solid transparent", transition: "all 0.2s", whiteSpace: "nowrap" }}>
+                <button key={t.id} onClick={() => setActiveTab(t.id)} style={{ background: "none", border: "none", padding: "14px 18px", fontSize: "13px", fontFamily: "inherit", cursor: "pointer", color: activeTab === t.id ? "#818CF8" : "#64748B", borderBottom: activeTab === t.id ? "2px solid #818CF8" : "2px solid transparent", transition: "all 0.2s", whiteSpace: "nowrap" }}>
                   {t.label}
                 </button>
               ))}
@@ -160,7 +169,7 @@
                     <div key={i} style={{ background: "#111827", border: `1px solid ${c.color}25`, borderRadius: "12px", padding: "20px" }}>
                       <div style={{ fontSize: "28px", marginBottom: "10px" }}>{c.icon}</div>
                       <h4 style={{ margin: "0 0 8px", fontSize: "14px", fontWeight: "600", color: c.color }}>{c.title}</h4>
-                      <p style={{ margin: 0, fontSize: "13px", color: "#64748B", lineHeight: "1.6" }}>{c.desc}</p>
+                      <p style={{ margin: 0, fontSize: "14px", color: "#94A3B8", lineHeight: "1.6" }}>{c.desc}</p>
                     </div>
                   ))}
                 </div>
@@ -175,7 +184,7 @@
                   <p style={{ margin: "0 0 12px", fontSize: "15px", color: "#CBD5E1", lineHeight: "1.8" }}>
                     <strong style={{ color: "#E2E8F0" }}>ШІ-Пісочниця</strong> — безпечне, контрольоване середовище для тестування та оцінки систем штучного інтелекту з використанням репрезентативних даних та реалістичних сценаріїв, з пропорційним наглядом, перед розгортанням у продуктивне середовище.
                   </p>
-                  <p style={{ margin: "0 0 12px", fontSize: "13px", color: "#94A3B8", lineHeight: "1.7" }}>
+                  <p style={{ margin: "0 0 12px", fontSize: "14px", color: "#94A3B8", lineHeight: "1.7" }}>
                     Ключовий принцип: <em style={{ color: "#A5B4FC" }}>«дозволяти і контролювати»</em> замість «забороняти і ігнорувати». Будь-який співробітник може безпечно та прозоро тестувати ШІ-інструменти незалежно від наявності цих інструментів в офіційно затвердженому стеку.
                   </p>
                   <div style={{ margin: "12px 0", display: "grid", gap: "8px" }}>
@@ -186,11 +195,11 @@
                     ].map((item, i) => (
                       <div key={i} style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
                         <span style={{ color: "#818CF8", flexShrink: 0, marginTop: "2px" }}>·</span>
-                        <span style={{ fontSize: "13px", color: "#CBD5E1", lineHeight: "1.6" }}>{item}</span>
+                        <span style={{ fontSize: "14px", color: "#CBD5E1", lineHeight: "1.6" }}>{item}</span>
                       </div>
                     ))}
                   </div>
-                  <p style={{ margin: 0, fontSize: "13px", color: "#64748B", lineHeight: "1.7" }}>
+                  <p style={{ margin: 0, fontSize: "14px", color: "#94A3B8", lineHeight: "1.7" }}>
                     JPMorgan Chase (McKinsey, 2025): «Ми не мандатували LLM Suite — ми зробили opt-in. Перші отримали доступ, решта захотіла самі. Це створило здорову конкуренцію і культуру прийняття. Сьогодні 50% співробітників використовують GenAI щодня.»
                   </p>
                 </div>
@@ -204,8 +213,8 @@
                   ].map((b, i) => (
                     <div key={i} style={{ background: "#111827", border: `1px solid ${b.color}30`, borderRadius: "12px", padding: "20px" }}>
                       <div style={{ fontSize: "26px", marginBottom: "10px" }}>{b.icon}</div>
-                      <h4 style={{ margin: "0 0 12px", fontSize: "13px", fontWeight: "600", color: b.color }}>{b.title}</h4>
-                      {b.items.map((it, j) => <div key={j} style={{ fontSize: "12px", color: "#64748B", marginBottom: "5px" }}>· {it}</div>)}
+                      <h4 style={{ margin: "0 0 12px", fontSize: "14px", fontWeight: "600", color: b.color }}>{b.title}</h4>
+                      {b.items.map((it, j) => <div key={j} style={{ fontSize: "13px", color: "#94A3B8", marginBottom: "5px" }}>· {it}</div>)}
                     </div>
                   ))}
                 </div>
@@ -216,7 +225,7 @@
             {activeTab === "architecture" && (
               <div>
                 <SectionTitle>Дворівнева архітектура</SectionTitle>
-                <p style={{ color: "#64748B", marginBottom: "24px", fontSize: "13px", lineHeight: "1.7" }}>Пісочниця природно ділиться на два рівні залежно від вимог до інфраструктури. Обидва рівні працюють з тестовими / анонімізованими даними — живі банківські дані і виробничі системи залишаються поза межами пісочниці.</p>
+                <p style={{ color: "#94A3B8", marginBottom: "24px", fontSize: "14px", lineHeight: "1.7" }}>Пісочниця природно ділиться на два рівні залежно від вимог до інфраструктури. Обидва рівні працюють з тестовими / анонімізованими даними — живі банківські дані і виробничі системи залишаються поза межами пісочниці.</p>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))", gap: "24px", marginBottom: "40px" }}>
                   {twoTiers.map((tier, i) => (
                     <div key={i} style={{ background: "#111827", border: `1px solid ${tier.color}40`, borderRadius: "16px", padding: "26px", position: "relative", overflow: "hidden" }}>
@@ -224,38 +233,38 @@
                       <div style={{ fontSize: "32px", marginBottom: "10px" }}>{tier.icon}</div>
                       <div style={{ fontSize: "10px", color: tier.color, letterSpacing: "2px", textTransform: "uppercase", marginBottom: "5px" }}>{tier.tier}</div>
                       <h3 style={{ fontSize: "19px", fontWeight: "700", color: "#F1F5F9", margin: "0 0 10px" }}>{tier.name}</h3>
-                      <p style={{ fontSize: "13px", color: "#94A3B8", lineHeight: "1.7", margin: "0 0 16px" }}>{tier.desc}</p>
+                      <p style={{ fontSize: "14px", color: "#94A3B8", lineHeight: "1.7", margin: "0 0 16px" }}>{tier.desc}</p>
                       <div style={{ marginBottom: "14px" }}>
                         <div style={{ fontSize: "10px", color: "#475569", letterSpacing: "1px", textTransform: "uppercase", marginBottom: "6px" }}>Базові інструменти</div>
                         <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "10px" }}>
-                          {tier.examples.map((e, j) => <span key={j} style={{ background: `${tier.color}15`, border: `1px solid ${tier.color}30`, borderRadius: "4px", padding: "2px 7px", fontSize: "11px", color: tier.color }}>{e}</span>)}
+                          {tier.examples.map((e, j) => <span key={j} style={{ background: `${tier.color}15`, border: `1px solid ${tier.color}30`, borderRadius: "4px", padding: "2px 7px", fontSize: "12px", color: tier.color }}>{e}</span>)}
                         </div>
                         <div style={{ fontSize: "10px", color: "#475569", letterSpacing: "1px", textTransform: "uppercase", marginBottom: "6px" }}>Розширені можливості</div>
                         <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
-                          {tier.extras.map((e, j) => <span key={j} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "4px", padding: "2px 7px", fontSize: "11px", color: "#64748B" }}>{e}</span>)}
+                          {tier.extras.map((e, j) => <span key={j} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "4px", padding: "2px 7px", fontSize: "12px", color: "#94A3B8" }}>{e}</span>)}
                         </div>
                       </div>
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
                         <div>
                           <div style={{ fontSize: "10px", color: "#10B981", letterSpacing: "1px", marginBottom: "5px" }}>✓ ПЕРЕВАГИ</div>
-                          {tier.pros.map((p, j) => <div key={j} style={{ fontSize: "11px", color: "#6EE7B7", marginBottom: "3px" }}>· {p}</div>)}
+                          {tier.pros.map((p, j) => <div key={j} style={{ fontSize: "12px", color: "#6EE7B7", marginBottom: "3px" }}>· {p}</div>)}
                         </div>
                         <div>
                           <div style={{ fontSize: "10px", color: "#EF4444", letterSpacing: "1px", marginBottom: "5px" }}>⚠ РИЗИКИ</div>
-                          {tier.risks.map((r, j) => <div key={j} style={{ fontSize: "11px", color: "#FCA5A5", marginBottom: "3px" }}>· {r}</div>)}
+                          {tier.risks.map((r, j) => <div key={j} style={{ fontSize: "12px", color: "#FCA5A5", marginBottom: "3px" }}>· {r}</div>)}
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
                 <div style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: "10px", padding: "16px 20px", marginBottom: "40px" }}>
-                  <div style={{ fontSize: "12px", fontWeight: "600", color: "#EF4444", marginBottom: "6px" }}>⚠ Важливо: що НЕ входить до пісочниці</div>
-                  <p style={{ margin: 0, fontSize: "13px", color: "#94A3B8", lineHeight: "1.6" }}>
+                  <div style={{ fontSize: "13px", fontWeight: "600", color: "#EF4444", marginBottom: "6px" }}>⚠ Важливо: що НЕ входить до пісочниці</div>
+                  <p style={{ margin: 0, fontSize: "14px", color: "#94A3B8", lineHeight: "1.6" }}>
                     Пісочниця працює виключно з <strong style={{ color: "#E2E8F0" }}>відкритими, синтетичними або анонімізованими даними</strong>. Живі транзакційні дані клієнтів, підключення до core-банківських систем та виробничі процеси — поза межами пісочниці.
                   </p>
                 </div>
                 <SectionTitle>Класифікація даних</SectionTitle>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "14px" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "14px", marginBottom: "40px" }}>
                   {[
                     { level: "🟢 Відкриті", desc: "Публічна інформація, синтетичні набори, загальнодоступні датасети", allowed: "Рівень 1 і 2 без обмежень" },
                     { level: "🟡 Анонімізовані", desc: "Деперсоналізовані клієнтські дані, агрегована статистика без прямих ідентифікаторів", allowed: "За схвалення ІБ та Комплаєнс" },
@@ -263,10 +272,39 @@
                   ].map((d, i) => (
                     <div key={i} style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "18px" }}>
                       <div style={{ fontSize: "15px", fontWeight: "600", color: "#E2E8F0", marginBottom: "6px" }}>{d.level}</div>
-                      <p style={{ fontSize: "12px", color: "#94A3B8", marginBottom: "10px", lineHeight: "1.5" }}>{d.desc}</p>
-                      <div style={{ fontSize: "11px", color: "#64748B", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "8px" }}>{d.allowed}</div>
+                      <p style={{ fontSize: "13px", color: "#94A3B8", marginBottom: "10px", lineHeight: "1.5" }}>{d.desc}</p>
+                      <div style={{ fontSize: "12px", color: "#94A3B8", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "8px" }}>{d.allowed}</div>
                     </div>
                   ))}
+                </div>
+
+                <SectionTitle>Ресурси інфраструктури</SectionTitle>
+                <p style={{ color: "#94A3B8", marginBottom: "20px", fontSize: "14px", lineHeight: "1.7" }}>
+                  Заявник має отримати робоче середовище, а не PDF з інструкціями. Це означає чітко визначені пули ліцензій, обчислень і середовищ, які надаються автоматично.
+                </p>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "14px", marginBottom: "24px" }}>
+                  {[
+                    { icon: "🪪", title: "Ліцензії та доступи", color: "#3B82F6", desc: "Пул на 50-100 одночасних учасників. Авто-провіжен через SSO після погодження. Деактивація після закриття експерименту. Окремі тенанти ChatGPT Enterprise / Claude Teams / Copilot.", limits: "до 100 одночасних місць · TTL 90 днів" },
+                    { icon: "🧮", title: "API-кредити", color: "#10B981", desc: "Спільний пул API-кредитів (OpenAI, Anthropic, Google) з per-experiment cap. Бажано через AI Gateway — єдина точка обліку та квот.", limits: "Cap: $100 / $1k / >$1k за рівнем" },
+                    { icon: "🌐", title: "Хостинг прототипів", color: "#8B5CF6", desc: "Vercel Team (sandbox) для веб-аппок. Azure Resource Group (sandbox) для ботів, Functions, Storage. n8n Cloud workspace для low-code. Загальний домен *.sandbox.bank.ua.", limits: "Окремі проєкти на експеримент" },
+                    { icon: "🖥️", title: "On-prem / GPU", color: "#EC4899", desc: "Tier 2: виділена VM з GPU під Ollama, LM Studio, JupyterHub. Бронювання слотів через реєстр (щоб не воювати за ресурс).", limits: "Бронювання слотами по 4-8 год" },
+                    { icon: "📂", title: "Дані", color: "#F59E0B", desc: "Власні синтетичні набори (анонімізовані витяги + згенеровані LLM), публічні датасети, навчальні корпуси. Жодних живих транзакцій.", limits: "Лише з реєстру дозволених наборів" },
+                    { icon: "🛠️", title: "Підтримка", color: "#06B6D4", desc: "Канал в Teams + черговий ШІ-чемпіон. База типових питань. Платформа: IT-Платформа + Data Engineering — адмініструють середовища.", limits: "Реакція в Teams ≤ 2 год" },
+                  ].map((r, i) => (
+                    <div key={i} style={{ background: "#111827", border: `1px solid ${r.color}25`, borderRadius: "12px", padding: "18px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
+                        <span style={{ fontSize: "22px" }}>{r.icon}</span>
+                        <h4 style={{ margin: 0, fontSize: "14px", fontWeight: "600", color: r.color }}>{r.title}</h4>
+                      </div>
+                      <p style={{ margin: "0 0 10px", fontSize: "13px", color: "#CBD5E1", lineHeight: "1.6" }}>{r.desc}</p>
+                      <div style={{ fontSize: "12px", color: r.color, paddingTop: "8px", borderTop: `1px solid ${r.color}15` }}>
+                        {r.limits}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: "10px", padding: "14px 18px", fontSize: "13px", color: "#CBD5E1", lineHeight: "1.7" }}>
+                  💡 Конкретні ліміти — як стартовий орієнтир. Реальні налаштовуються після перших 10-15 експериментів на основі фактичного споживання.
                 </div>
               </div>
             )}
@@ -275,7 +313,7 @@
             {activeTab === "process" && (
               <div>
                 <SectionTitle>Життєвий цикл експерименту</SectionTitle>
-                <p style={{ color: "#64748B", marginBottom: "28px", lineHeight: "1.7", fontSize: "13px" }}>Головне правило: <strong style={{ color: "#A5B4FC" }}>KPI та критерій успіху визначаються ДО початку</strong>, а не після.</p>
+                <p style={{ color: "#94A3B8", marginBottom: "28px", lineHeight: "1.7", fontSize: "14px" }}>Головне правило: <strong style={{ color: "#A5B4FC" }}>KPI та критерій успіху визначаються ДО початку</strong>, а не після.</p>
                 <div style={{ marginBottom: "44px" }}>
                   {lifecycle.map((step, i) => (
                     <div key={i} style={{ display: "flex", gap: "18px", marginBottom: "4px" }}>
@@ -285,16 +323,16 @@
                       </div>
                       <div style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "14px 18px", flex: 1, marginBottom: "10px" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "5px" }}>
-                          <span style={{ fontSize: "11px", color: step.color, fontWeight: "600", letterSpacing: "1px", textTransform: "uppercase" }}>Етап {step.id}</span>
+                          <span style={{ fontSize: "12px", color: step.color, fontWeight: "600", letterSpacing: "1px", textTransform: "uppercase" }}>Етап {step.id}</span>
                           <h4 style={{ margin: 0, fontSize: "15px", fontWeight: "600", color: "#E2E8F0" }}>{step.phase}</h4>
                         </div>
-                        <p style={{ margin: 0, fontSize: "13px", color: "#94A3B8", lineHeight: "1.6" }}>{step.desc}</p>
+                        <p style={{ margin: 0, fontSize: "14px", color: "#94A3B8", lineHeight: "1.6" }}>{step.desc}</p>
                       </div>
                     </div>
                   ))}
                 </div>
                 <SectionTitle>Критерії відбору кейсів</SectionTitle>
-                <p style={{ color: "#64748B", marginBottom: "20px", fontSize: "13px", lineHeight: "1.7" }}>Не кожна ідея потрапляє до пісочниці автоматично. Відбір базується на чотирьох критеріях — це захищає ресурси і підвищує якість експериментів.</p>
+                <p style={{ color: "#94A3B8", marginBottom: "20px", fontSize: "14px", lineHeight: "1.7" }}>Не кожна ідея потрапляє до пісочниці автоматично. Відбір базується на чотирьох критеріях — це захищає ресурси і підвищує якість експериментів.</p>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "14px", marginBottom: "28px" }}>
                   {[
                     { icon: "💡", title: "Інноваційність", color: "#818CF8", desc: "Чи пропонує кейс новий підхід, інструмент або спосіб вирішення задачі? Не обов'язково революція — достатньо відчутного кроку вперед відносно поточної практики." },
@@ -307,14 +345,14 @@
                         <span style={{ fontSize: "20px" }}>{c.icon}</span>
                         <h4 style={{ margin: 0, fontSize: "14px", fontWeight: "600", color: c.color }}>{c.title}</h4>
                       </div>
-                      <p style={{ margin: 0, fontSize: "12px", color: "#64748B", lineHeight: "1.6" }}>{c.desc}</p>
+                      <p style={{ margin: 0, fontSize: "13px", color: "#94A3B8", lineHeight: "1.6" }}>{c.desc}</p>
                     </div>
                   ))}
                 </div>
 
                 <SectionTitle>Комітет з відбору</SectionTitle>
                 <div style={{ background: "rgba(30,27,75,0.4)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: "12px", padding: "22px", marginBottom: "40px" }}>
-                  <p style={{ margin: "0 0 16px", fontSize: "13px", color: "#94A3B8", lineHeight: "1.7" }}>
+                  <p style={{ margin: "0 0 16px", fontSize: "14px", color: "#94A3B8", lineHeight: "1.7" }}>
                     Комітет — це не бюрократичний фільтр, а рада практиків. Більшість — бізнес-люди та предметні експерти, а не технічні спеціалісти. Рішення мають прийматись швидко: для легких кейсів — без комітету взагалі.
                   </p>
                   <div style={{ display: "grid", gap: "10px" }}>
@@ -325,12 +363,12 @@
                       { who: "Власник пісочниці", what: "Стежить за дотриманням процесу та SLA. Не блокує — фасилітує.", color: "#3B82F6" },
                     ].map((r, i) => (
                       <div key={i} style={{ display: "flex", gap: "14px", alignItems: "start", padding: "10px 0", borderBottom: i < 3 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
-                        <div style={{ fontSize: "12px", fontWeight: "600", color: r.color, flexShrink: 0, minWidth: "160px", paddingTop: "1px" }}>{r.who}</div>
-                        <div style={{ fontSize: "12px", color: "#64748B", lineHeight: "1.5" }}>{r.what}</div>
+                        <div style={{ fontSize: "13px", fontWeight: "600", color: r.color, flexShrink: 0, minWidth: "160px", paddingTop: "1px" }}>{r.who}</div>
+                        <div style={{ fontSize: "13px", color: "#94A3B8", lineHeight: "1.5" }}>{r.what}</div>
                       </div>
                     ))}
                   </div>
-                  <div style={{ marginTop: "14px", padding: "10px 14px", background: "rgba(99,102,241,0.08)", borderRadius: "8px", fontSize: "12px", color: "#A5B4FC" }}>
+                  <div style={{ marginTop: "14px", padding: "10px 14px", background: "rgba(99,102,241,0.08)", borderRadius: "8px", fontSize: "13px", color: "#A5B4FC" }}>
                     💡 Легкі кейси (відкриті дані, низький ризик) — авто-апрув без комітету. Комітет збирається лише для чутливих або ресурсомістких кейсів.
                   </div>
                 </div>
@@ -340,12 +378,12 @@
                   {[
                     { icon: "🚀", title: "Scale", color: "#10B981", desc: "KPI перевищено. Proof of value підтверджено. Передається для впровадження через стандартні корпоративні процеси." },
                     { icon: "🔧", title: "Fix", color: "#F59E0B", desc: "Цікавий кейс, але KPI не досягнуто. Діагностика через operational metrics. Корекція і новий цикл." },
-                    { icon: "📦", title: "Kill", color: "#64748B", desc: "Нижче Kill-threshold. Припиняється без шкоди для команди. Документується — «що не спрацювало» є також знанням організації." },
+                    { icon: "📦", title: "Kill", color: "#94A3B8", desc: "Нижче Kill-threshold. Припиняється без шкоди для команди. Документується — «що не спрацювало» є також знанням організації." },
                   ].map((o, i) => (
                     <div key={i} style={{ background: "#111827", border: `1px solid ${o.color}30`, borderRadius: "12px", padding: "22px", textAlign: "center" }}>
                       <div style={{ fontSize: "30px", marginBottom: "10px" }}>{o.icon}</div>
                       <h4 style={{ fontSize: "16px", fontWeight: "700", color: o.color, margin: "0 0 10px" }}>{o.title}</h4>
-                      <p style={{ fontSize: "12px", color: "#64748B", lineHeight: "1.6", margin: 0 }}>{o.desc}</p>
+                      <p style={{ fontSize: "13px", color: "#94A3B8", lineHeight: "1.6", margin: 0 }}>{o.desc}</p>
                     </div>
                   ))}
                 </div>
@@ -361,9 +399,157 @@
                   ].map((p, i) => (
                     <div key={i} style={{ display: "flex", gap: "10px", alignItems: "flex-start", marginBottom: i < 5 ? "10px" : "0" }}>
                       <div style={{ color: "#10B981", flexShrink: 0, marginTop: "2px" }}>✓</div>
-                      <div style={{ fontSize: "13px", color: "#94A3B8", lineHeight: "1.6" }}>{p}</div>
+                      <div style={{ fontSize: "14px", color: "#94A3B8", lineHeight: "1.6" }}>{p}</div>
                     </div>
                   ))}
+                </div>
+
+                <SectionTitle>Стартовий перелік кейсів (Starter pack)</SectionTitle>
+                <p style={{ color: "#94A3B8", marginBottom: "20px", fontSize: "14px", lineHeight: "1.7" }}>
+                  Технічні вимоги до пісочниці визначаються конкретними кейсами, а не навпаки. Нижче — стартовий перелік: він свідомо широкий, щоб перевірити різні типи інструментів і потоків роботи. Реальний бек-лог формується із заявок співробітників.
+                </p>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "14px", marginBottom: "40px" }}>
+                  {[
+                    { icon: "🧩", title: "Скіли для Claude Code", color: "#818CF8", desc: "Встановити та протестувати кастомні Skills/команди для Claude Code. Оцінити, як прискорюють типові задачі команди (огляди коду, генерація SQL, документація).", tools: "Claude Code, Skills" },
+                    { icon: "🎨", title: "Vibe-coded прототип", color: "#10B981", desc: "Згенерувати міні-аппку через AI (Claude/v0/Cursor), розгорнути на Vercel або іншому хостингу, перевірити що працює end-to-end. Кейс для перевірки швидкості «від ідеї до робочого UI».", tools: "Claude / v0, Vercel" },
+                    { icon: "🤖", title: "Бот в Azure", color: "#3B82F6", desc: "Зібрати робочого бота в Microsoft Copilot Studio / Power Virtual Agents / Bot Framework під конкретний процес. Підключити до Teams. Перевірити інтеграцію зі знаннями.", tools: "Azure, Copilot Studio, Teams" },
+                    { icon: "📚", title: "Custom GPT / Claude Project", color: "#F59E0B", desc: "Налаштувати бота-помічника з кастомними інструкціями та власною базою знань для конкретного бізнес-юніту (наприклад, помічник з регламентів).", tools: "ChatGPT Enterprise, Claude Projects" },
+                    { icon: "🔗", title: "n8n-флоу з ШІ", color: "#8B5CF6", desc: "Збудувати автоматизацію типу «вхідний запит → класифікація через LLM → дія в системі». Перевірити, чи зменшує ручну обробку.", tools: "n8n, OpenAI/Anthropic API" },
+                    { icon: "🔌", title: "MCP-сервер", color: "#EC4899", desc: "Підключити внутрішній інструмент (внутрішня вікі, тестова БД, набір API) до Claude/ChatGPT через MCP-сервер. Перевірити доступність даних агенту в безпечному режимі.", tools: "MCP, Claude/ChatGPT" },
+                    { icon: "📖", title: "RAG на знаннях", color: "#06B6D4", desc: "Зібрати пошук-помічника по корпоративних регламентах та політиках (анонімізованих або відкритих). Виміряти точність відповідей.", tools: "LangChain, Vector DB" },
+                    { icon: "🎙️", title: "Транскрибування + саммарі", color: "#EF4444", desc: "Whisper або інший STT + LLM для розшифровки і саммарі тестових дзвінків/зустрічей. Оцінити якість і час економії.", tools: "Whisper, GPT/Claude" },
+                    { icon: "✉️", title: "Шаблони відповідей", color: "#F97316", desc: "Кастомний промпт-помічник для типових відповідей клієнтам або всередині компанії. Перевірити узгодженість тону.", tools: "ChatGPT / Claude, System Prompt" },
+                    { icon: "⚖️", title: "Порівняння моделей", color: "#A78BFA", desc: "Один і той же набір промптів прогнати через Claude, GPT, Gemini, Llama. Виміряти якість/швидкість/вартість на типових задачах банку.", tools: "OpenRouter / AI Gateway" },
+                  ].map((c, i) => (
+                    <div key={i} style={{ background: "#111827", border: `1px solid ${c.color}30`, borderRadius: "12px", padding: "16px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
+                        <span style={{ fontSize: "22px" }}>{c.icon}</span>
+                        <h4 style={{ margin: 0, fontSize: "14px", fontWeight: "600", color: c.color }}>{c.title}</h4>
+                      </div>
+                      <p style={{ margin: "0 0 10px", fontSize: "13px", color: "#CBD5E1", lineHeight: "1.6" }}>{c.desc}</p>
+                      <div style={{ fontSize: "12px", color: "#94A3B8", paddingTop: "8px", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                        <span style={{ color: "#64748B" }}>Інструменти: </span>{c.tools}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: "10px", padding: "14px 18px", marginBottom: "40px", fontSize: "13px", color: "#CBD5E1", lineHeight: "1.7" }}>
+                  💡 Перелік навмисно охоплює різні типи: SaaS-боти, low-code (n8n), хмарні платформи (Azure, Vercel), кастомний код, інтеграції через MCP, on-prem RAG. Це дає реальну картину, яких ресурсів потребує пісочниця — замість абстрактного списку «потрібен AI-стек».
+                </div>
+
+                <SectionTitle>Як подати заявку</SectionTitle>
+                <p style={{ color: "#94A3B8", marginBottom: "20px", fontSize: "14px", lineHeight: "1.7" }}>
+                  Подача має бути такою простою, щоб співробітник обрав офіційний шлях, а не тіньовий ШІ. Один канал, єдина форма, прогнозований результат.
+                </p>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "24px" }}>
+                  <div style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "20px" }}>
+                    <h4 style={{ margin: "0 0 12px", fontSize: "14px", fontWeight: "600", color: "#A5B4FC" }}>📥 Канал подачі</h4>
+                    <p style={{ margin: "0 0 10px", fontSize: "13px", color: "#CBD5E1", lineHeight: "1.6" }}>
+                      Єдина внутрішня сторінка з формою (внутрішній портал / Teams-аппка / Jira-форма). Без email-ланцюжків.
+                    </p>
+                    <p style={{ margin: 0, fontSize: "13px", color: "#94A3B8", lineHeight: "1.6" }}>
+                      На сторінці одразу видно: правила, типи кейсів, перелік дозволених інструментів, орієнтовний SLA.
+                    </p>
+                  </div>
+                  <div style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "20px" }}>
+                    <h4 style={{ margin: "0 0 12px", fontSize: "14px", fontWeight: "600", color: "#6EE7B7" }}>📤 Що отримує заявник</h4>
+                    <div style={{ fontSize: "13px", color: "#CBD5E1", lineHeight: "1.7" }}>
+                      <div>· номер заявки в реєстрі</div>
+                      <div>· доступ до тестового середовища (SSO)</div>
+                      <div>· бюджетний ліміт на API/інфраструктуру</div>
+                      <div>· шаблон звіту KPI</div>
+                      <div>· ментор-чемпіон за запитом</div>
+                    </div>
+                  </div>
+                </div>
+                <div style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "20px", marginBottom: "40px" }}>
+                  <h4 style={{ margin: "0 0 14px", fontSize: "14px", fontWeight: "600", color: "#E2E8F0" }}>📝 Поля заявки</h4>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px 24px" }}>
+                    {[
+                      { label: "Назва ідеї та автор", req: true },
+                      { label: "Бізнес-юніт і спонсор", req: true },
+                      { label: "Проблема, яку вирішуємо", req: true },
+                      { label: "Гіпотеза цінності (час / гроші / якість)", req: true },
+                      { label: "KPI та Kill-threshold (заздалегідь!)", req: true },
+                      { label: "Тип даних (відкриті / анонімні / синтетичні)", req: true },
+                      { label: "Інструменти (Claude / GPT / n8n / Azure / Vercel / on-prem)", req: true },
+                      { label: "Очікувані ресурси (підписки, API-кредити, GPU)", req: true },
+                      { label: "Тривалість (1-2 тиж / місяць / квартал)", req: true },
+                      { label: "Відповідальна особа і час її залученості", req: true },
+                      { label: "Залежність від інших систем", req: false },
+                      { label: "Очікувана аудиторія результату", req: false },
+                    ].map((f, i) => (
+                      <div key={i} style={{ display: "flex", gap: "8px", alignItems: "center", fontSize: "13px", color: "#CBD5E1" }}>
+                        <span style={{ color: f.req ? "#EF4444" : "#94A3B8", fontSize: "12px", flexShrink: 0 }}>{f.req ? "*" : "○"}</span>
+                        <span>{f.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ marginTop: "14px", paddingTop: "12px", borderTop: "1px solid rgba(255,255,255,0.05)", fontSize: "12px", color: "#94A3B8" }}>
+                    <span style={{ color: "#EF4444" }}>*</span> обовʼязкові поля · <span style={{ color: "#94A3B8" }}>○</span> опціональні
+                  </div>
+                </div>
+
+                <SectionTitle>SLA та ескалація</SectionTitle>
+                <p style={{ color: "#94A3B8", marginBottom: "20px", fontSize: "14px", lineHeight: "1.7" }}>
+                  SLA — це обіцянка перед заявником. Якщо пісочниця повільніша за тіньовий ШІ, співробітники її ігноруватимуть. Кожен етап має власника і шлях ескалації.
+                </p>
+                <div style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", overflow: "hidden", marginBottom: "20px" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr 0.8fr 0.8fr 1.2fr 1.2fr", background: "rgba(99,102,241,0.08)", padding: "12px 16px", fontSize: "12px", fontWeight: "600", color: "#A5B4FC", letterSpacing: "0.5px", textTransform: "uppercase" }}>
+                    <div>Тип кейсу</div>
+                    <div>Скринінг</div>
+                    <div>Погодження</div>
+                    <div>Доступи</div>
+                    <div>Власник етапу</div>
+                    <div>Ескалація</div>
+                  </div>
+                  {[
+                    { type: "🟢 Легкий", typeDesc: "Відкриті дані, інструмент у стеку", screen: "≤ 4 год", approve: "Авто-апрув", access: "≤ 24 год", owner: "Власник пісочниці", escalate: "Lead команди трансформації — через 24 год", color: "#10B981" },
+                    { type: "🟡 Середній", typeDesc: "Анонімні дані або новий інструмент", screen: "≤ 24 год", approve: "≤ 3 дні", access: "≤ 2 дні", owner: "ІБ + Комплаєнс", escalate: "CDO — через 5 робочих днів", color: "#F59E0B" },
+                    { type: "🔴 Складний", typeDesc: "Інфраструктура / GPU / нестандартний контур", screen: "≤ 48 год", approve: "≤ 5 днів", access: "≤ 5 днів", owner: "Комітет з відбору", escalate: "CIO + CDO — через 10 робочих днів", color: "#EF4444" },
+                  ].map((r, i) => (
+                    <div key={i} style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr 0.8fr 0.8fr 1.2fr 1.2fr", padding: "14px 16px", fontSize: "13px", color: "#CBD5E1", borderTop: "1px solid rgba(255,255,255,0.04)", alignItems: "start" }}>
+                      <div>
+                        <div style={{ fontWeight: "600", color: r.color, marginBottom: "3px" }}>{r.type}</div>
+                        <div style={{ fontSize: "12px", color: "#94A3B8" }}>{r.typeDesc}</div>
+                      </div>
+                      <div>{r.screen}</div>
+                      <div>{r.approve}</div>
+                      <div>{r.access}</div>
+                      <div style={{ fontSize: "12px" }}>{r.owner}</div>
+                      <div style={{ fontSize: "12px" }}>{r.escalate}</div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: "10px", padding: "14px 18px", marginBottom: "40px" }}>
+                  <div style={{ fontSize: "13px", fontWeight: "600", color: "#FCA5A5", marginBottom: "6px" }}>⚠ Прострочення SLA</div>
+                  <p style={{ margin: 0, fontSize: "13px", color: "#94A3B8", lineHeight: "1.6" }}>
+                    Кожен прорив SLA фіксується автоматично і потрапляє у звіт власника пісочниці. Повторюване прострочення одного етапу — сигнал переглянути процес або ресурси, а не «штраф» виконавцю.
+                  </p>
+                </div>
+
+                <SectionTitle>Бюджет на експерименти</SectionTitle>
+                <p style={{ color: "#94A3B8", marginBottom: "20px", fontSize: "14px", lineHeight: "1.7" }}>
+                  Пісочниця без бюджету — це лозунг. Окремий рядок бюджету дає швидкість: учасник не вимолює доступи у фінансистів під кожен експеримент.
+                </p>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "14px", marginBottom: "24px" }}>
+                  {[
+                    { icon: "💼", title: "Джерело", color: "#818CF8", desc: "Окремий рядок бюджету відповідального підрозділу (Інноваційний хаб / Digital Transformation / Data Office). Не «з кишені» бізнес-юніту, інакше — внутрішнє трактування." },
+                    { icon: "📦", title: "На що йде", color: "#10B981", desc: "Підписки SaaS (ChatGPT Enterprise, Claude, Copilot, n8n Cloud), API-кредити, хостинг (Vercel/Azure sandbox), GPU-години для on-prem, навчання та матеріали." },
+                    { icon: "🎯", title: "Ліміт на експеримент", color: "#F59E0B", desc: "Легкий — до $100 (без апрувів). Середній — до $1 000 (узгоджує власник пісочниці). Складний — понад $1 000 (комітет, обовʼязковий KPI/Kill-threshold)." },
+                    { icon: "📊", title: "Звітність", color: "#06B6D4", desc: "Щомісячний дашборд споживання за заявкою, бізнес-юнітом, інструментом. Помічник бачить залишок ліміту в реєстрі експериментів." },
+                  ].map((b, i) => (
+                    <div key={i} style={{ background: "#111827", border: `1px solid ${b.color}25`, borderRadius: "12px", padding: "18px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
+                        <span style={{ fontSize: "22px" }}>{b.icon}</span>
+                        <h4 style={{ margin: 0, fontSize: "14px", fontWeight: "600", color: b.color }}>{b.title}</h4>
+                      </div>
+                      <p style={{ margin: 0, fontSize: "13px", color: "#CBD5E1", lineHeight: "1.6" }}>{b.desc}</p>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.2)", borderRadius: "10px", padding: "14px 18px", marginBottom: "40px", fontSize: "13px", color: "#CBD5E1", lineHeight: "1.7" }}>
+                  ✓ <strong style={{ color: "#6EE7B7" }}>Що НЕ покривається</strong> бюджетом пісочниці: production-ліцензії після Scale, інтеграція з core-системами, повноцінне впровадження. Це окремі процеси з власним фінансуванням.
                 </div>
               </div>
             )}
@@ -380,7 +566,7 @@
                   ].map((s, i) => (
                     <div key={i} style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "20px", textAlign: "center" }}>
                       <div style={{ fontSize: "32px", fontWeight: "800", color: "#818CF8", marginBottom: "8px" }}>{s.val}</div>
-                      <p style={{ fontSize: "12px", color: "#94A3B8", lineHeight: "1.5", margin: "0 0 8px" }}>{s.text}</p>
+                      <p style={{ fontSize: "13px", color: "#94A3B8", lineHeight: "1.5", margin: "0 0 8px" }}>{s.text}</p>
                       <div style={{ fontSize: "10px", color: "#334155" }}>{s.source}</div>
                     </div>
                   ))}
@@ -389,7 +575,7 @@
                   <p style={{ margin: "0 0 10px", fontSize: "14px", color: "#CBD5E1", lineHeight: "1.7" }}>
                     Infosys CTO: <em>«Технологія еволюціонує так швидко — компанії мусять експериментувати, і щось буде провалюватись. Потрібна страховка.»</em>
                   </p>
-                  <p style={{ margin: 0, fontSize: "13px", color: "#64748B", lineHeight: "1.7" }}>
+                  <p style={{ margin: 0, fontSize: "14px", color: "#94A3B8", lineHeight: "1.7" }}>
                     Microsoft (2025): <em>«Якщо люди бояться соціального осуду за використання ШІ — вони свідомо уникатимуть цих інструментів, навіть коли вони можуть покращити роботу.»</em>
                   </p>
                 </div>
@@ -399,22 +585,22 @@
                     <div key={i} style={{ background: "#111827", border: `1px solid ${p.color}25`, borderRadius: "10px", padding: "16px 20px", display: "grid", gridTemplateColumns: "32px 80px 1fr", gap: "14px", alignItems: "center" }}>
                       <div style={{ fontSize: "22px" }}>{p.icon}</div>
                       <div>
-                        <div style={{ fontSize: "12px", fontWeight: "600", color: p.color }}>{p.name}</div>
-                        <div style={{ fontSize: "11px", color: "#475569" }}>{p.pct}</div>
+                        <div style={{ fontSize: "13px", fontWeight: "600", color: p.color }}>{p.name}</div>
+                        <div style={{ fontSize: "12px", color: "#475569" }}>{p.pct}</div>
                       </div>
-                      <p style={{ margin: 0, fontSize: "13px", color: "#64748B", lineHeight: "1.5" }}>{p.desc}</p>
+                      <p style={{ margin: 0, fontSize: "14px", color: "#94A3B8", lineHeight: "1.5" }}>{p.desc}</p>
                     </div>
                   ))}
                 </div>
                 <SectionTitle>ROI-фреймворк: 4 стадії зрілості (Atlassian, 2026)</SectionTitle>
-                <p style={{ color: "#64748B", marginBottom: "20px", fontSize: "13px" }}>Помилка більшості: вимагати revenue impact від команди на стадії Exploring. Правильні метрики — для правильної стадії.</p>
+                <p style={{ color: "#94A3B8", marginBottom: "20px", fontSize: "14px" }}>Помилка більшості: вимагати revenue impact від команди на стадії Exploring. Правильні метрики — для правильної стадії.</p>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "14px" }}>
                   {roiFramework.map((s, i) => (
                     <div key={i} style={{ background: "#111827", border: `1px solid ${s.color}30`, borderRadius: "12px", padding: "18px" }}>
                       <div style={{ fontSize: "24px", marginBottom: "8px" }}>{s.icon}</div>
                       <div style={{ fontSize: "10px", color: s.color, letterSpacing: "1px", textTransform: "uppercase", marginBottom: "4px" }}>{s.stage}</div>
-                      <div style={{ fontSize: "13px", fontWeight: "600", color: "#E2E8F0", marginBottom: "12px" }}>{s.ukr}</div>
-                      {s.metrics.map((m, j) => <div key={j} style={{ fontSize: "11px", color: "#475569", marginBottom: "4px" }}>· {m}</div>)}
+                      <div style={{ fontSize: "14px", fontWeight: "600", color: "#E2E8F0", marginBottom: "12px" }}>{s.ukr}</div>
+                      {s.metrics.map((m, j) => <div key={j} style={{ fontSize: "12px", color: "#475569", marginBottom: "4px" }}>· {m}</div>)}
                     </div>
                   ))}
                 </div>
@@ -429,13 +615,13 @@
                   {globalExamples.map((ex, i) => (
                     <div key={i} style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "22px", display: "grid", gridTemplateColumns: "auto 1fr", gap: "18px", alignItems: "start" }}>
                       <div style={{ textAlign: "center", minWidth: "75px" }}>
-                        <div style={{ fontSize: "12px", fontWeight: "700", color: "#E2E8F0", marginBottom: "5px" }}>{ex.org}</div>
+                        <div style={{ fontSize: "13px", fontWeight: "700", color: "#E2E8F0", marginBottom: "5px" }}>{ex.org}</div>
                         <div style={{ background: `${ex.tagColor}20`, border: `1px solid ${ex.tagColor}40`, borderRadius: "4px", padding: "2px 7px", fontSize: "10px", color: ex.tagColor }}>{ex.tag}</div>
-                        <div style={{ fontSize: "11px", color: "#475569", marginTop: "4px" }}>{ex.year}</div>
+                        <div style={{ fontSize: "12px", color: "#475569", marginTop: "4px" }}>{ex.year}</div>
                       </div>
                       <div>
                         <h4 style={{ margin: "0 0 7px", fontSize: "15px", fontWeight: "600", color: "#C7D2FE" }}>{ex.title}</h4>
-                        <p style={{ margin: 0, fontSize: "13px", color: "#94A3B8", lineHeight: "1.7" }}>{ex.desc}</p>
+                        <p style={{ margin: 0, fontSize: "14px", color: "#94A3B8", lineHeight: "1.7" }}>{ex.desc}</p>
                       </div>
                     </div>
                   ))}
@@ -450,8 +636,8 @@
                   ].map((t, i) => (
                     <div key={i} style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "18px" }}>
                       <div style={{ fontSize: "26px", marginBottom: "9px" }}>{t.icon}</div>
-                      <h4 style={{ margin: "0 0 7px", fontSize: "13px", fontWeight: "600", color: "#E2E8F0" }}>{t.title}</h4>
-                      <p style={{ margin: 0, fontSize: "12px", color: "#64748B", lineHeight: "1.6" }}>{t.trend}</p>
+                      <h4 style={{ margin: "0 0 7px", fontSize: "14px", fontWeight: "600", color: "#E2E8F0" }}>{t.title}</h4>
+                      <p style={{ margin: 0, fontSize: "13px", color: "#94A3B8", lineHeight: "1.6" }}>{t.trend}</p>
                     </div>
                   ))}
                 </div>
@@ -467,9 +653,9 @@
                     <div key={i} style={{ background: "#111827", border: `1px solid ${l.color}30`, borderRadius: "10px", padding: "18px", display: "grid", gridTemplateColumns: "110px 1fr", gap: "18px", alignItems: "start" }}>
                       <div>
                         <div style={{ fontSize: "10px", color: l.color, letterSpacing: "1px", textTransform: "uppercase", marginBottom: "3px" }}>{l.line}</div>
-                        <div style={{ fontSize: "12px", fontWeight: "600", color: "#E2E8F0", lineHeight: "1.4" }}>{l.title}</div>
+                        <div style={{ fontSize: "13px", fontWeight: "600", color: "#E2E8F0", lineHeight: "1.4" }}>{l.title}</div>
                       </div>
-                      <p style={{ margin: 0, fontSize: "13px", color: "#94A3B8", lineHeight: "1.7" }}>{l.desc}</p>
+                      <p style={{ margin: 0, fontSize: "14px", color: "#94A3B8", lineHeight: "1.7" }}>{l.desc}</p>
                     </div>
                   ))}
                 </div>
@@ -488,7 +674,7 @@
                   ].map((f, i) => (
                     <div key={i} style={{ display: "flex", gap: "14px", alignItems: "center", padding: "9px 0", borderBottom: i < 8 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
                       <div style={{ width: "22px", height: "22px", background: "rgba(99,102,241,0.2)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: "700", color: "#818CF8", flexShrink: 0 }}>{i + 1}</div>
-                      <div style={{ fontSize: "13px", color: "#CBD5E1" }}>{f}</div>
+                      <div style={{ fontSize: "14px", color: "#CBD5E1" }}>{f}</div>
                     </div>
                   ))}
                 </div>
@@ -500,17 +686,17 @@
                     { icon: "🎲", title: "Ненавмисні наслідки", color: "#8B5CF6", desc: "ШІ-модель веде себе несподівано: дає упереджені результати, підсилює наявні помилки в даних або впливає на рішення, яких від неї не очікували.", mitigation: "Визначати scope і обмеження моделі ДО початку. Human-in-the-loop для будь-яких рішень, що впливають на людей. Документувати відхилення." },
                     { icon: "📊", title: "Хибне відчуття доведеної цінності", color: "#3B82F6", desc: "Команда вважає POC успіхом і масштабує — хоча реальний бізнес-ефект не перевірено на репрезентативних даних у реальних умовах.", mitigation: "KPI та success threshold визначаються ДО початку. Proof of value, а не proof of concept — обов'язкова умова для Scale." },
                     { icon: "🏗️", title: "Залежність від вендора / lock-in", color: "#10B981", desc: "Пісочниця будується на одному SaaS-інструменті, і організація втрачає гнучкість або стикається з раптовою зміною умов постачальника.", mitigation: "Документувати інструменти у реєстрі. Уникати глибокої інтеграції на етапі експерименту. Оцінювати портабельність перед масштабуванням." },
-                    { icon: "👥", title: "Тіньовий ШІ поза пісочницею", color: "#64748B", desc: "Співробітники продовжують використовувати ШІ-інструменти поза офіційним каналом, якщо пісочниця здається занадто складною або повільною.", mitigation: "Простий процес подачі заявки. SLA ≤24 год для легких кейсів. Регулярна комунікація про переваги офіційного шляху." },
+                    { icon: "👥", title: "Тіньовий ШІ поза пісочницею", color: "#94A3B8", desc: "Співробітники продовжують використовувати ШІ-інструменти поза офіційним каналом, якщо пісочниця здається занадто складною або повільною.", mitigation: "Простий процес подачі заявки. SLA ≤24 год для легких кейсів. Регулярна комунікація про переваги офіційного шляху." },
                   ].map((r, i) => (
                     <div key={i} style={{ background: "#111827", border: `1px solid ${r.color}25`, borderRadius: "12px", padding: "18px 20px" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
                         <span style={{ fontSize: "18px" }}>{r.icon}</span>
                         <h4 style={{ margin: 0, fontSize: "14px", fontWeight: "600", color: r.color }}>{r.title}</h4>
                       </div>
-                      <p style={{ margin: "0 0 8px", fontSize: "12px", color: "#94A3B8", lineHeight: "1.5" }}>{r.desc}</p>
+                      <p style={{ margin: "0 0 8px", fontSize: "13px", color: "#94A3B8", lineHeight: "1.5" }}>{r.desc}</p>
                       <div style={{ display: "flex", gap: "8px", alignItems: "flex-start" }}>
                         <span style={{ fontSize: "10px", color: "#10B981", fontWeight: "600", flexShrink: 0, paddingTop: "2px" }}>↳ ЗНИЖЕННЯ:</span>
-                        <span style={{ fontSize: "12px", color: "#64748B", lineHeight: "1.5" }}>{r.mitigation}</span>
+                        <span style={{ fontSize: "13px", color: "#94A3B8", lineHeight: "1.5" }}>{r.mitigation}</span>
                       </div>
                     </div>
                   ))}
@@ -529,7 +715,7 @@
                       <div style={{ fontSize: "24px", fontWeight: "800", color: "rgba(99,102,241,0.3)", lineHeight: 1, flexShrink: 0, minWidth: "28px" }}>{r.step}</div>
                       <div>
                         <h4 style={{ margin: "0 0 3px", fontSize: "14px", fontWeight: "600", color: "#E2E8F0" }}>{r.title}</h4>
-                        <p style={{ margin: 0, fontSize: "12px", color: "#64748B", lineHeight: "1.6" }}>{r.desc}</p>
+                        <p style={{ margin: 0, fontSize: "13px", color: "#94A3B8", lineHeight: "1.6" }}>{r.desc}</p>
                       </div>
                     </div>
                   ))}
@@ -541,23 +727,23 @@
             {activeTab === "regulatory" && (
               <div>
                 <div style={{ background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.25)", borderRadius: "12px", padding: "20px 24px", marginBottom: "36px" }}>
-                  <div style={{ fontSize: "12px", fontWeight: "600", color: "#10B981", marginBottom: "8px" }}>🇺🇦 Контекст для України</div>
-                  <p style={{ margin: 0, fontSize: "13px", color: "#94A3B8", lineHeight: "1.7" }}>
+                  <div style={{ fontSize: "13px", fontWeight: "600", color: "#10B981", marginBottom: "8px" }}>🇺🇦 Контекст для України</div>
+                  <p style={{ margin: 0, fontSize: "14px", color: "#94A3B8", lineHeight: "1.7" }}>
                     Україна не є членом ЄС і не підпадає під пряму дію EU AI Act або DORA. <strong style={{ color: "#E2E8F0" }}>Однак</strong> ці стандарти корисні як найкраща практика і можуть стати актуальними при євроінтеграції або партнерстві з EU-фінустановами.
                   </p>
                 </div>
                 <SectionTitle>EU AI Act — що це і для кого</SectionTitle>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "36px" }}>
                   <div style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "20px" }}>
-                    <div style={{ fontSize: "12px", fontWeight: "600", color: "#EF4444", marginBottom: "10px" }}>Коли AI Act застосовується до НЕ-EU банку</div>
+                    <div style={{ fontSize: "13px", fontWeight: "600", color: "#EF4444", marginBottom: "10px" }}>Коли AI Act застосовується до НЕ-EU банку</div>
                     {["Банк розгортає ШІ-системи для клієнтів або партнерів в ЄС", "Вихідні дані ШІ-системи використовуються суб'єктами в ЄС", "Банк має дочірні структури або відділення в ЄС"].map((it, i) => (
-                      <div key={i} style={{ fontSize: "12px", color: "#94A3B8", marginBottom: "6px" }}>· {it}</div>
+                      <div key={i} style={{ fontSize: "13px", color: "#94A3B8", marginBottom: "6px" }}>· {it}</div>
                     ))}
                   </div>
                   <div style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "20px" }}>
-                    <div style={{ fontSize: "12px", fontWeight: "600", color: "#10B981", marginBottom: "10px" }}>Коли AI Act НЕ застосовується</div>
+                    <div style={{ fontSize: "13px", fontWeight: "600", color: "#10B981", marginBottom: "10px" }}>Коли AI Act НЕ застосовується</div>
                     {["Банк працює виключно на внутрішньому ринку України", "Немає клієнтів або вихідних даних, що надходять до ЄС", "Внутрішні ШІ-інструменти без виходу на ринок ЄС"].map((it, i) => (
-                      <div key={i} style={{ fontSize: "12px", color: "#94A3B8", marginBottom: "6px" }}>· {it}</div>
+                      <div key={i} style={{ fontSize: "13px", color: "#94A3B8", marginBottom: "6px" }}>· {it}</div>
                     ))}
                   </div>
                 </div>
@@ -572,12 +758,12 @@
                   ].map((it, i) => (
                     <div key={i} style={{ display: "flex", gap: "10px", alignItems: "flex-start", marginBottom: i < 4 ? "8px" : "0" }}>
                       <div style={{ color: "#818CF8", flexShrink: 0, marginTop: "2px" }}>·</div>
-                      <div style={{ fontSize: "13px", color: "#64748B" }}>{it}</div>
+                      <div style={{ fontSize: "14px", color: "#94A3B8" }}>{it}</div>
                     </div>
                   ))}
                 </div>
-                <div style={{ padding: "16px 18px", background: "rgba(15,23,42,0.8)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", fontSize: "11px", color: "#475569", lineHeight: "1.8" }}>
-                  <strong style={{ color: "#64748B" }}>Джерела:</strong> EU AI Act Article 2, EY/MIT Agentic AI Banking Report (2025), Infosys/MIT Psychological Safety AI Era (2025), BCG AI Adoption Puzzle (2025), JPMorgan/McKinsey AI Culture (2025), Citi AI Accelerators (Business Insider 2026), HSBC AI Ambassador Network, Atlassian AI ROI Framework (2026), Olakai 30-Day AI Pilot (2026)
+                <div style={{ padding: "16px 18px", background: "rgba(15,23,42,0.8)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", fontSize: "12px", color: "#475569", lineHeight: "1.8" }}>
+                  <strong style={{ color: "#94A3B8" }}>Джерела:</strong> EU AI Act Article 2, EY/MIT Agentic AI Banking Report (2025), Infosys/MIT Psychological Safety AI Era (2025), BCG AI Adoption Puzzle (2025), JPMorgan/McKinsey AI Culture (2025), Citi AI Accelerators (Business Insider 2026), HSBC AI Ambassador Network, Atlassian AI ROI Framework (2026), Olakai 30-Day AI Pilot (2026)
                 </div>
               </div>
             )}
