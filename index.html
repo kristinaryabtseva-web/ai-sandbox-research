@@ -113,6 +113,7 @@
         { id: "overview", label: "Огляд" },
         { id: "architecture", label: "Архітектура" },
         { id: "process", label: "Процес" },
+        { id: "launch", label: "Запуск" },
         { id: "culture", label: "Культура" },
         { id: "world", label: "Світ" },
         { id: "governance", label: "Governance" },
@@ -303,8 +304,72 @@
                     </div>
                   ))}
                 </div>
-                <div style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: "10px", padding: "14px 18px", fontSize: "13px", color: "#CBD5E1", lineHeight: "1.7" }}>
+                <div style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: "10px", padding: "14px 18px", marginBottom: "40px", fontSize: "13px", color: "#CBD5E1", lineHeight: "1.7" }}>
                   💡 Конкретні ліміти — як стартовий орієнтир. Реальні налаштовуються після перших 10-15 експериментів на основі фактичного споживання.
+                </div>
+
+                <SectionTitle>Технічна безпека</SectionTitle>
+                <p style={{ color: "#94A3B8", marginBottom: "20px", fontSize: "14px", lineHeight: "1.7" }}>
+                  Декларація «дані не виходять» — це початок. Далі потрібні конкретні контролі: мережа, виявлення витоків, моніторинг, реакція на інциденти.
+                </p>
+                <div style={{ display: "grid", gap: "12px", marginBottom: "20px" }}>
+                  {[
+                    {
+                      icon: "🔒", title: "Мережева ізоляція", color: "#3B82F6",
+                      controls: [
+                        "Окремий тенант / VPC для sandbox (Azure subscription, Vercel team, AWS account)",
+                        "Жодних peering-зʼєднань з production VPN/мережею",
+                        "Outbound traffic — лише до затвердженого whitelist домен AI-провайдерів",
+                        "DNS-фільтр для блокування ненавчених сервісів (особисті ChatGPT-акаунти)",
+                      ],
+                    },
+                    {
+                      icon: "🛡️", title: "DLP — Data Loss Prevention", color: "#EF4444",
+                      controls: [
+                        "Pre-prompt scan: автоматична перевірка вхідних промптів на ПІІ / NDA / клієнтські ідентифікатори",
+                        "Заборона upload файлів без класифікації",
+                        "Регулярне сканування sandbox-репозиторіїв на наявність ключів API, токенів",
+                        "Інтеграція з корпоративною DLP-системою (Microsoft Purview / Symantec / аналог)",
+                      ],
+                    },
+                    {
+                      icon: "📡", title: "SIEM та логування", color: "#8B5CF6",
+                      controls: [
+                        "Всі запити до LLM-провайдерів логуються (промпт + метадані, без чутливих відповідей)",
+                        "Логи учасників, доступів, бюджету — централізовано в корпоративний SIEM",
+                        "Окремий канал алертів: аномальне споживання API, нетипові запити, спроби з PII",
+                        "Retention логів — 12 місяців мінімум, доступ — лише ІБ і аудит",
+                      ],
+                    },
+                    {
+                      icon: "🚨", title: "Incident response playbook", color: "#F59E0B",
+                      controls: [
+                        "Сценарій 1: підозра витоку → ізолювати акаунт, заморозити доступи, аудит логів за 24 год",
+                        "Сценарій 2: prompt injection / jailbreak → блокувати інструмент, нотифікувати всіх учасників",
+                        "Сценарій 3: runaway cost → авто-зупинка експерименту при перевищенні ліміту на 150%",
+                        "Сценарій 4: vendor security alert → 24-год план аудиту всіх активних кейсів з цим інструментом",
+                        "Сценарій 5: AI-згенерований код потрапив у виробництво поза процесом → ретроспективна перевірка, terms-review",
+                      ],
+                    },
+                  ].map((s, i) => (
+                    <div key={i} style={{ background: "#111827", border: `1px solid ${s.color}25`, borderRadius: "12px", padding: "18px 20px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
+                        <span style={{ fontSize: "20px" }}>{s.icon}</span>
+                        <h4 style={{ margin: 0, fontSize: "14px", fontWeight: "700", color: s.color }}>{s.title}</h4>
+                      </div>
+                      <div style={{ display: "grid", gap: "6px" }}>
+                        {s.controls.map((c, j) => (
+                          <div key={j} style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+                            <span style={{ color: s.color, flexShrink: 0, marginTop: "2px", fontSize: "12px" }}>✓</span>
+                            <span style={{ fontSize: "13px", color: "#CBD5E1", lineHeight: "1.6" }}>{c}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: "10px", padding: "14px 18px", fontSize: "13px", color: "#CBD5E1", lineHeight: "1.7" }}>
+                  ⚠ Технічна безпека пісочниці — це <strong style={{ color: "#FCA5A5" }}>не зменшена копія</strong> production-безпеки. Це інший контур з власним threat-model: основна загроза тут — не атака зовні, а ненавмисний витік даних учасниками.
                 </div>
               </div>
             )}
@@ -490,6 +555,49 @@
                   </div>
                 </div>
 
+                <SectionTitle>Experiment Charter (одна сторінка)</SectionTitle>
+                <p style={{ color: "#94A3B8", marginBottom: "20px", fontSize: "14px", lineHeight: "1.7" }}>
+                  Charter — обовʼязковий артефакт перед стартом експерименту. Одна сторінка, заповнюється за 30-60 хвилин. Якщо не вдається заповнити — кейс ще не готовий до пісочниці.
+                </p>
+                <div style={{ background: "#0F172A", border: "1px solid rgba(99,102,241,0.3)", borderRadius: "14px", padding: "24px", marginBottom: "40px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", paddingBottom: "14px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                    <div>
+                      <div style={{ fontSize: "11px", color: "#A5B4FC", letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: "4px" }}>Experiment Charter v1</div>
+                      <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "700", color: "#F1F5F9" }}>[Назва експерименту]</h3>
+                    </div>
+                    <div style={{ background: "rgba(99,102,241,0.15)", border: "1px solid rgba(99,102,241,0.3)", borderRadius: "4px", padding: "4px 10px", fontSize: "12px", color: "#A5B4FC" }}>#EXP-2026-001</div>
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px 32px" }}>
+                    {[
+                      { label: "1. Власник кейсу", value: "ПІБ, бізнес-юніт, email/Teams" },
+                      { label: "2. Бізнес-спонсор", value: "Хто несе бізнес-цінність на собі" },
+                      { label: "3. Проблема", value: "У 1-2 реченнях: що болить сьогодні і чому це коштує бізнесу" },
+                      { label: "4. Гіпотеза", value: "«Якщо ми X — то Y зменшиться/виросте на Z%, бо ...»" },
+                      { label: "5. KPI (≤ 3)", value: "Що міряємо. Як міряємо. Хто рахує. Який baseline." },
+                      { label: "6. Kill-threshold", value: "Поріг, нижче якого ми зупиняємо. Визначається ДО старту." },
+                      { label: "7. Scope", value: "Що входить. Що НЕ входить (явно)." },
+                      { label: "8. Дані", value: "Тип, джерело, обсяг, рівень класифікації, як анонімізовані." },
+                      { label: "9. Інструменти", value: "Claude / GPT / n8n / Azure / Vercel / on-prem. Версія." },
+                      { label: "10. Ресурси і бюджет", value: "API-кредити, GPU-години, FTE учасників, тривалість." },
+                      { label: "11. Ризики (≥ 3)", value: "Що може піти не так. Як це зменшуємо." },
+                      { label: "12. Етап завершення", value: "Дата. Кому презентуємо результат. Який артефакт залишається." },
+                    ].map((f, i) => (
+                      <div key={i}>
+                        <div style={{ fontSize: "12px", fontWeight: "600", color: "#818CF8", marginBottom: "4px" }}>{f.label}</div>
+                        <div style={{ fontSize: "13px", color: "#94A3B8", lineHeight: "1.5", fontStyle: "italic" }}>{f.value}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ marginTop: "20px", paddingTop: "14px", borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
+                    <div style={{ fontSize: "12px", color: "#94A3B8" }}>
+                      <span style={{ color: "#10B981" }}>✓</span> Узгоджено: бізнес-спонсор · ІБ (для чутливих) · власник пісочниці
+                    </div>
+                    <div style={{ fontSize: "12px", color: "#94A3B8" }}>
+                      Зберігається у реєстрі експериментів · доступний для всіх співробітників
+                    </div>
+                  </div>
+                </div>
+
                 <SectionTitle>SLA та ескалація</SectionTitle>
                 <p style={{ color: "#94A3B8", marginBottom: "20px", fontSize: "14px", lineHeight: "1.7" }}>
                   SLA — це обіцянка перед заявником. Якщо пісочниця повільніша за тіньовий ШІ, співробітники її ігноруватимуть. Кожен етап має власника і шлях ескалації.
@@ -550,6 +658,143 @@
                 </div>
                 <div style={{ background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.2)", borderRadius: "10px", padding: "14px 18px", marginBottom: "40px", fontSize: "13px", color: "#CBD5E1", lineHeight: "1.7" }}>
                   ✓ <strong style={{ color: "#6EE7B7" }}>Що НЕ покривається</strong> бюджетом пісочниці: production-ліцензії після Scale, інтеграція з core-системами, повноцінне впровадження. Це окремі процеси з власним фінансуванням.
+                </div>
+              </div>
+            )}
+
+            {/* LAUNCH */}
+            {activeTab === "launch" && (
+              <div>
+                <SectionTitle>Roadmap запуску пісочниці — 12 місяців</SectionTitle>
+                <p style={{ color: "#94A3B8", marginBottom: "28px", fontSize: "14px", lineHeight: "1.7" }}>
+                  Пісочниця не вмикається презентацією. Це програма зі своєю послідовністю фаз і власними KPI. Нижче — практичний roadmap, який можна адаптувати під банк за тижні, а не місяці.
+                </p>
+                <div style={{ display: "grid", gap: "16px", marginBottom: "44px" }}>
+                  {[
+                    {
+                      phase: "Фаза 0", days: "Тижні 1-4", title: "Фундамент",
+                      color: "#818CF8",
+                      milestones: [
+                        "Призначено власника пісочниці та спонсора (C-level)",
+                        "Затверджено бюджет на 12 місяців",
+                        "Сформовано стартовий комітет (бізнес + ІБ + Комплаєнс + IT)",
+                        "Опубліковано правила пісочниці на одній внутрішній сторінці",
+                        "Закуплені/налаштовані базові SaaS-ліцензії (ChatGPT/Claude/Copilot)",
+                        "Підготовлена форма подачі заявки + реєстр експериментів",
+                      ],
+                      exit: "Готовність прийняти першу заявку. SLA — описаний, не виміряний.",
+                    },
+                    {
+                      phase: "Фаза 1", days: "Місяці 2-3", title: "Pilot Wave (5-10 кейсів)",
+                      color: "#10B981",
+                      milestones: [
+                        "Виявлено 5-10 природних чемпіонів — їм дають перший доступ",
+                        "Запущено 5-10 експериментів зі Starter pack (різні типи: SaaS / Vercel / Azure / n8n)",
+                        "Перші demo-сесії: тиждень 8 і тиждень 12",
+                        "Зафіксовано перші Scale / Kill з висновками у реєстрі",
+                        "Виміряно фактичний SLA — порівняно з декларованим",
+                        "Перший внутрішній звіт спонсору про прогрес",
+                      ],
+                      exit: "Доведено, що процес працює. Є 2-3 success stories для широкої комунікації.",
+                    },
+                    {
+                      phase: "Фаза 2", days: "Місяці 4-6", title: "Масштабування",
+                      color: "#F59E0B",
+                      milestones: [
+                        "Відкрито подачу для всіх бізнес-юнітів",
+                        "Розширено пул ліцензій до 50-100 одночасних учасників",
+                        "Запущено програму ШІ-чемпіонів (10-20 осіб з різних BU)",
+                        "Введено Tier 2 (on-prem) для кейсів з анонімними даними",
+                        "Налагоджено auto-provisioning доступів через SSO",
+                        "Перші 1-2 експерименти проходять у production (Scale)",
+                      ],
+                      exit: "20-30 активних експериментів одночасно. Цикл «заявка → доступ» стабільний.",
+                    },
+                    {
+                      phase: "Фаза 3", days: "Місяці 7-12", title: "Зрілість",
+                      color: "#EC4899",
+                      milestones: [
+                        "Програма ШІ-чемпіонів охоплює 5-10% співробітників",
+                        "Реєстр містить 50+ завершених кейсів — це база знань",
+                        "ROI пісочниці виміряний і захищений перед правлінням",
+                        "Інтеграція з річним циклом інновацій банку",
+                        "Регулярні квартальні demo-дні",
+                        "Зворотний звʼязок переведений у v2 правил пісочниці",
+                      ],
+                      exit: "Пісочниця — частина операційного ритму банку, а не «проєкт».",
+                    },
+                  ].map((p, i) => (
+                    <div key={i} style={{ background: "#111827", border: `1px solid ${p.color}30`, borderRadius: "14px", padding: "22px", display: "grid", gridTemplateColumns: "160px 1fr", gap: "22px" }}>
+                      <div>
+                        <div style={{ fontSize: "11px", color: p.color, fontWeight: "700", letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: "6px" }}>{p.phase}</div>
+                        <div style={{ fontSize: "13px", color: "#94A3B8", marginBottom: "10px" }}>{p.days}</div>
+                        <h3 style={{ margin: 0, fontSize: "17px", fontWeight: "700", color: "#F1F5F9", lineHeight: "1.3" }}>{p.title}</h3>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: "12px", color: p.color, fontWeight: "600", letterSpacing: "0.5px", textTransform: "uppercase", marginBottom: "10px" }}>Ключові milestones</div>
+                        <div style={{ display: "grid", gap: "6px", marginBottom: "14px" }}>
+                          {p.milestones.map((m, j) => (
+                            <div key={j} style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+                              <span style={{ color: p.color, flexShrink: 0, marginTop: "2px" }}>·</span>
+                              <span style={{ fontSize: "13px", color: "#CBD5E1", lineHeight: "1.6" }}>{m}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <div style={{ background: `${p.color}10`, border: `1px solid ${p.color}25`, borderRadius: "8px", padding: "10px 14px", fontSize: "13px", color: "#CBD5E1", lineHeight: "1.6" }}>
+                          <strong style={{ color: p.color }}>Exit-критерій:</strong> {p.exit}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <SectionTitle>Метрики пісочниці як програми</SectionTitle>
+                <p style={{ color: "#94A3B8", marginBottom: "20px", fontSize: "14px", lineHeight: "1.7" }}>
+                  KPI окремих експериментів — це одне. Окремо вимірюємо пісочницю як платформу: швидкість, конверсія, задоволеність, культурний ефект.
+                </p>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px", marginBottom: "20px" }}>
+                  {[
+                    { icon: "⏱️", title: "Cycle time", value: "Заявка → доступ", target: "медіана ≤ 3 дні", color: "#3B82F6" },
+                    { icon: "🚀", title: "Scale rate", value: "% експериментів, що дійшли до production", target: "≥ 15-20% (рік)", color: "#10B981" },
+                    { icon: "🔧", title: "Kill rate", value: "% експериментів закрито з висновком", target: "30-50% — це нормально", color: "#F59E0B" },
+                    { icon: "📈", title: "Active experiments", value: "одночасних відкритих кейсів", target: "20-40 у фазі 2-3", color: "#8B5CF6" },
+                    { icon: "👥", title: "Адопція", value: "унікальних учасників за квартал", target: "+30% q/q у фазі 2", color: "#EC4899" },
+                    { icon: "💚", title: "NPS учасників", value: "лояльність до процесу", target: "≥ 40", color: "#06B6D4" },
+                    { icon: "📜", title: "SLA-успіх", value: "% заявок у межах SLA", target: "≥ 90%", color: "#A78BFA" },
+                    { icon: "👻", title: "Тіньовий ШІ", value: "% активних користувачів, що подали офіційну заявку", target: "↑ q/q", color: "#EF4444" },
+                  ].map((m, i) => (
+                    <div key={i} style={{ background: "#111827", border: `1px solid ${m.color}25`, borderRadius: "12px", padding: "16px" }}>
+                      <div style={{ fontSize: "22px", marginBottom: "8px" }}>{m.icon}</div>
+                      <h4 style={{ margin: "0 0 4px", fontSize: "13px", fontWeight: "700", color: m.color }}>{m.title}</h4>
+                      <p style={{ margin: "0 0 8px", fontSize: "12px", color: "#94A3B8", lineHeight: "1.5" }}>{m.value}</p>
+                      <div style={{ fontSize: "12px", color: "#CBD5E1", paddingTop: "8px", borderTop: `1px solid ${m.color}15`, fontWeight: "600" }}>
+                        {m.target}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: "10px", padding: "14px 18px", marginBottom: "44px", fontSize: "13px", color: "#CBD5E1", lineHeight: "1.7" }}>
+                  💡 Kill rate 30-50% — здорова ознака. Якщо біля 0% — або фільтр на вході надто жорсткий, або команда боїться зупиняти. Якщо біля 100% — або заявки нерелевантні, або відсутній support під час експерименту.
+                </div>
+
+                <SectionTitle>Команда пісочниці</SectionTitle>
+                <p style={{ color: "#94A3B8", marginBottom: "20px", fontSize: "14px", lineHeight: "1.7" }}>
+                  Без виділеної команди пісочниця залишається презентацією. Це мінімальна конфігурація для перших 12 місяців.
+                </p>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "14px", marginBottom: "20px" }}>
+                  {[
+                    { role: "Власник пісочниці", fte: "1.0 FTE", desc: "Product Owner програми. Відповідає за SLA, реєстр, бюджет, звіти спонсору. Єдина точка контакту для бізнесу." },
+                    { role: "Platform Engineer", fte: "0.5-1.0 FTE", desc: "Підтримує середовища: Vercel/Azure/n8n tenants, SSO, доступи, моніторинг лімітів. Реагує на технічні запити." },
+                    { role: "ШІ-чемпіони (network)", fte: "10-20 осіб × 5-10%", desc: "Менторять колег, проводять demo, тестують нові інструменти першими. Час офіційно враховується в OKR." },
+                    { role: "ІБ-офіцер (part-time)", fte: "0.2 FTE", desc: "Прокурує погодження чутливих кейсів, оновлює правила. Не блокує — фасилітує. Дозволено швидкий канал у Teams." },
+                    { role: "Юрист / Комплаєнс (part-time)", fte: "0.2 FTE", desc: "Перевіряє IP, контракти з постачальниками, регуляторні обмеження. Залучається на середні/складні кейси." },
+                  ].map((t, i) => (
+                    <div key={i} style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "18px" }}>
+                      <h4 style={{ margin: "0 0 4px", fontSize: "14px", fontWeight: "700", color: "#E2E8F0" }}>{t.role}</h4>
+                      <div style={{ fontSize: "12px", color: "#818CF8", fontWeight: "600", marginBottom: "10px" }}>{t.fte}</div>
+                      <p style={{ margin: 0, fontSize: "13px", color: "#94A3B8", lineHeight: "1.6" }}>{t.desc}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
@@ -702,6 +947,67 @@
                   ))}
                 </div>
 
+                <SectionTitle>AI-специфічні ризики</SectionTitle>
+                <p style={{ color: "#94A3B8", marginBottom: "20px", fontSize: "14px", lineHeight: "1.7" }}>
+                  Загальні ризики пісочниці (вище) — про дані та процес. Ці — про саму природу LLM/агентного ШІ. Їх неможливо «закрити політикою» — потрібні технічні контролі.
+                </p>
+                <div style={{ display: "grid", gap: "12px", marginBottom: "36px" }}>
+                  {[
+                    {
+                      icon: "💉", title: "Prompt injection", color: "#EF4444",
+                      desc: "Шкідливі інструкції в даних, які LLM сприймає як команду користувача (наприклад, у файлі від клієнта є рядок «забудь попередні інструкції і ...»).",
+                      mitigation: "Розмежування system / user / data context. Sanitization вхідних даних. Регулярні red-team тести промптів. Заборонити LLM виконувати незворотні дії без human-in-the-loop.",
+                    },
+                    {
+                      icon: "👻", title: "Hallucinations", color: "#F59E0B",
+                      desc: "Модель впевнено генерує неіснуючі факти, цифри, посилання. Особливо небезпечно для юридичних, фінансових і клієнтських сценаріїв.",
+                      mitigation: "RAG з трейсингом джерел. Citation-обовʼязок у відповіді. Heuristic-перевірка чисел. Експерт-у-петлі для всього, що йде клієнту. KPI на factual accuracy перед Scale.",
+                    },
+                    {
+                      icon: "⚖️", title: "Bias / fairness", color: "#8B5CF6",
+                      desc: "Модель відтворює упередження тренувальних даних: гірша якість для певних груп, систематичне завищення/заниження ризику, дискримінаційні рекомендації.",
+                      mitigation: "Тестування на репрезентативних зрізах даних. Документований bias assessment перед Scale. Відмова масштабувати модель без перевірки на захищені групи.",
+                    },
+                    {
+                      icon: "🧪", title: "Training data leakage", color: "#EC4899",
+                      desc: "Дані, відправлені в SaaS-модель, можуть використовуватися для подальшого тренування і «спливти» у відповідях іншим користувачам.",
+                      mitigation: "Лише Enterprise/Teams-плани з zero-retention. Підтвердження умов у контракті. Заборона public-models для будь-чого, крім відкритих даних. Аудит TOS постачальників щоквартально.",
+                    },
+                    {
+                      icon: "🦠", title: "Model poisoning", color: "#06B6D4",
+                      desc: "Зловмисник модифікує open-source модель або dataset так, що вона працює нормально, але реагує специфічно на trigger-патерн.",
+                      mitigation: "Лише довірені реєстри моделей (HuggingFace verified, провайдерські). Хеш-перевірка артефактів. Не запускати випадкові моделі з GitHub у sandbox з даними.",
+                    },
+                    {
+                      icon: "💸", title: "Runaway cost", color: "#F97316",
+                      desc: "Агент у нескінченному циклі / неоптимальний промпт / great-prompt-bad-loop → за ніч спалив $5000 API-кредитів.",
+                      mitigation: "Hard cap на експеримент. Auto-stop при 150% від ліміту. Денний/тижневий cap на акаунт. Алерт у Teams при 80% витрачання.",
+                    },
+                    {
+                      icon: "🔁", title: "Автономія агентів", color: "#A78BFA",
+                      desc: "Агент сам викликає інструменти, надсилає дані назовні, ініціює дії в системах. Помилка планування → реальні наслідки.",
+                      mitigation: "Whitelisted-набір інструментів. Read-only режим за замовчуванням. Human approval для будь-якої незворотної дії (надсилання, оплата, запис у БД).",
+                    },
+                    {
+                      icon: "📉", title: "Model drift", color: "#94A3B8",
+                      desc: "Постачальник тихо оновив модель → результати, відтвoрювані тиждень тому, тепер інші. POC, який підтвердив гіпотезу, перестає працювати.",
+                      mitigation: "Pin model version. Регресійні промпт-тести при оновленнях. Документований план дій при deprecation моделі.",
+                    },
+                  ].map((r, i) => (
+                    <div key={i} style={{ background: "#111827", border: `1px solid ${r.color}25`, borderRadius: "12px", padding: "18px 20px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
+                        <span style={{ fontSize: "20px" }}>{r.icon}</span>
+                        <h4 style={{ margin: 0, fontSize: "14px", fontWeight: "700", color: r.color }}>{r.title}</h4>
+                      </div>
+                      <p style={{ margin: "0 0 10px", fontSize: "13px", color: "#94A3B8", lineHeight: "1.6" }}>{r.desc}</p>
+                      <div style={{ display: "flex", gap: "8px", alignItems: "flex-start", paddingTop: "8px", borderTop: `1px solid ${r.color}15` }}>
+                        <span style={{ fontSize: "10px", color: "#10B981", fontWeight: "700", flexShrink: 0, paddingTop: "3px", letterSpacing: "0.5px" }}>↳ ЗНИЖЕННЯ:</span>
+                        <span style={{ fontSize: "13px", color: "#CBD5E1", lineHeight: "1.6" }}>{r.mitigation}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
                 <SectionTitle>Практичні рекомендації</SectionTitle>
                 <div style={{ background: "rgba(30,27,75,0.4)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: "12px", padding: "24px" }}>
                   {[
@@ -747,6 +1053,60 @@
                     ))}
                   </div>
                 </div>
+                <SectionTitle>IP та юридичні питання</SectionTitle>
+                <p style={{ color: "#94A3B8", marginBottom: "20px", fontSize: "14px", lineHeight: "1.7" }}>
+                  Пісочниця породжує контент: код, текст, прототипи, аналітика. Без юридичної ясності експерименти зависають на стадії «а кому це належить?».
+                </p>
+                <div style={{ display: "grid", gap: "12px", marginBottom: "36px" }}>
+                  {[
+                    {
+                      icon: "©️", title: "Права на AI-згенерований контент", color: "#818CF8",
+                      desc: "Хто власник коду/тексту, створеного через Claude/ChatGPT/Copilot під час експерименту? Чи можна його комерціалізувати? Чи можна патентувати?",
+                      action: "Зафіксувати у внутрішній політиці: усі артефакти sandbox-експериментів — власність банку (за умови, що TOS постачальника це дозволяє). Перевірити TOS Anthropic / OpenAI / Microsoft на предмет використання output.",
+                    },
+                    {
+                      icon: "📜", title: "Договори з SaaS-постачальниками", color: "#10B981",
+                      desc: "Enterprise vs Teams vs Free план — різні TOS. Запитання: zero data retention? Чи можуть навчатися на наших даних? Де зберігаються логи? Чи є sub-processors?",
+                      action: "Юрист перевіряє DPA (Data Processing Agreement) перед допуском будь-якого SaaS-інструменту до пісочниці. Документувати в реєстрі дозволених постачальників з посиланням на DPA.",
+                    },
+                    {
+                      icon: "🌍", title: "Transfer даних за межі України", color: "#F59E0B",
+                      desc: "API-запити до OpenAI/Anthropic/Google = transfer даних до США/ЄС. Закон «Про захист персональних даних» вимагає підстави для transfer (згода / адекватність / стандартні умови).",
+                      action: "Для конфіденційних даних — заборона (вже в правилах). Для анонімізованих — перевірка legal basis. Документувати у Charter кожного експерименту, де відбувається transfer.",
+                    },
+                    {
+                      icon: "🎓", title: "Training data licensing", color: "#8B5CF6",
+                      desc: "Якщо команда дообчає модель (fine-tuning) на власних даних — чи можна використовувати ці дані за внутрішніми політиками? Чи є обмеження від колишніх контрактів з клієнтами?",
+                      action: "Фіксувати джерело тренувальних даних у Charter. Заборона fine-tuning на даних, що мають treaty-обмеження. Юрист підтверджує перед стартом.",
+                    },
+                    {
+                      icon: "📤", title: "Розкриття використання ШІ", color: "#EC4899",
+                      desc: "Якщо результат пісочниці потрапить у комунікацію з клієнтом — чи треба розкривати, що це AI-згенерований контент? EU AI Act цього вимагає, в Україні поки ні, але NPA НБУ може еволюціонувати.",
+                      action: "Внутрішня політика: будь-який AI-згенерований текст для клієнта проходить human review. Зберігати лог «що було AI-генероване» — для майбутніх регуляторних запитів.",
+                    },
+                    {
+                      icon: "⚖️", title: "Відповідальність за AI-рішення", color: "#EF4444",
+                      desc: "Якщо рішення підказала модель і це виявилось помилкою — хто відповідає? Розробник промпту? Власник процесу? Постачальник моделі?",
+                      action: "Принцип human accountability: підпис під рішенням ставить людина, не модель. AI — допоміжний інструмент, не subject. Документувати у Charter.",
+                    },
+                  ].map((l, i) => (
+                    <div key={i} style={{ background: "#111827", border: `1px solid ${l.color}25`, borderRadius: "12px", padding: "18px 20px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
+                        <span style={{ fontSize: "20px" }}>{l.icon}</span>
+                        <h4 style={{ margin: 0, fontSize: "14px", fontWeight: "700", color: l.color }}>{l.title}</h4>
+                      </div>
+                      <p style={{ margin: "0 0 10px", fontSize: "13px", color: "#94A3B8", lineHeight: "1.6" }}>{l.desc}</p>
+                      <div style={{ display: "flex", gap: "8px", alignItems: "flex-start", paddingTop: "8px", borderTop: `1px solid ${l.color}15` }}>
+                        <span style={{ fontSize: "10px", color: "#10B981", fontWeight: "700", flexShrink: 0, paddingTop: "3px", letterSpacing: "0.5px" }}>↳ ДІЯ:</span>
+                        <span style={{ fontSize: "13px", color: "#CBD5E1", lineHeight: "1.6" }}>{l.action}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: "10px", padding: "14px 18px", marginBottom: "36px", fontSize: "13px", color: "#CBD5E1", lineHeight: "1.7" }}>
+                  💡 Юрист / комплаєнс-офіцер залучається на старті (для політики) і в окремі чутливі кейси, а не до кожної заявки. Інакше — повертаємось до бюрократії, від якої тікали.
+                </div>
+
                 <SectionTitle>Внутрішнє регулювання НБУ та кращі практики</SectionTitle>
                 <div style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "22px", marginBottom: "36px" }}>
                   {[
